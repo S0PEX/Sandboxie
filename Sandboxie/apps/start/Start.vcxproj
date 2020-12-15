@@ -81,7 +81,7 @@
       <ExceptionHandling>Sync</ExceptionHandling>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libvcruntime.lib;libucrt.lib;ntdll.lib;User32.lib;Shell32.lib;Shlwapi.lib;Kernel32.lib;Gdi32.lib;SbieDll.lib;Ole32.lib;Common.lib;Advapi32.lib;Comctl32.lib;Comdlg32.lib;uuid.lib</AdditionalDependencies>
+      <AdditionalDependencies>libvcruntime.lib;libucrt.lib;ntdll.lib;User32.lib;Shell32.lib;Shlwapi.lib;Kernel32.lib;Gdi32.lib;AvastSboxDll.lib;Ole32.lib;Common.lib;Advapi32.lib;Comctl32.lib;Comdlg32.lib;uuid.lib</AdditionalDependencies>
     </Link>
     <ResourceCompile>
       <PreprocessorDefinitions>_MSC_VER=1200;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -95,7 +95,7 @@
       <ExceptionHandling>Sync</ExceptionHandling>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libvcruntime.lib;libucrt.lib;ntdll.lib;User32.lib;Shell32.lib;Shlwapi.lib;Kernel32.lib;Gdi32.lib;SbieDll.lib;Ole32.lib;Common.lib;Advapi32.lib;Comctl32.lib;Comdlg32.lib;uuid.lib</AdditionalDependencies>
+      <AdditionalDependencies>libvcruntime.lib;libucrt.lib;ntdll.lib;User32.lib;Shell32.lib;Shlwapi.lib;Kernel32.lib;Gdi32.lib;AvastSboxDll.lib;Ole32.lib;Common.lib;Advapi32.lib;Comctl32.lib;Comdlg32.lib;uuid.lib</AdditionalDependencies>
     </Link>
     <ResourceCompile>
       <PreprocessorDefinitions>_MSC_VER=1200;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -107,7 +107,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='SbieRelease|Win32'">
     <ClCompile />
     <Link>
-      <AdditionalDependencies>libvcruntime.lib;libucrt.lib;ntdll.lib;User32.lib;Shell32.lib;Shlwapi.lib;Kernel32.lib;Gdi32.lib;SbieDll.lib;Ole32.lib;Common.lib;Advapi32.lib;Comctl32.lib;Comdlg32.lib;uuid.lib</AdditionalDependencies>
+      <AdditionalDependencies>libvcruntime.lib;libucrt.lib;ntdll.lib;User32.lib;Shell32.lib;Shlwapi.lib;Kernel32.lib;Gdi32.lib;AvastSboxDll.lib;Ole32.lib;Common.lib;Advapi32.lib;Comctl32.lib;Comdlg32.lib;uuid.lib</AdditionalDependencies>
     </Link>
     <ResourceCompile>
       <PreprocessorDefinitions>_MSC_VER=1200;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -122,7 +122,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='SbieRelease|x64'">
     <ClCompile />
     <Link>
-      <AdditionalDependencies>libvcruntime.lib;libucrt.lib;ntdll.lib;User32.lib;Shell32.lib;Shlwapi.lib;Kernel32.lib;Gdi32.lib;SbieDll.lib;Ole32.lib;Common.lib;Advapi32.lib;Comctl32.lib;Comdlg32.lib;uuid.lib</AdditionalDependencies>
+      <AdditionalDependencies>libvcruntime.lib;libucrt.lib;ntdll.lib;User32.lib;Shell32.lib;Shlwapi.lib;Kernel32.lib;Gdi32.lib;AvastSboxDll.lib;Ole32.lib;Common.lib;Advapi32.lib;Comctl32.lib;Comdlg32.lib;uuid.lib</AdditionalDependencies>
       <FullProgramDatabaseFile>true</FullProgramDatabaseFile>
     </Link>
     <ResourceCompile>

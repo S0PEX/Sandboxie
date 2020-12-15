@@ -108,7 +108,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>uafxcw.lib;common.lib;SbieDll.lib;ntdll.lib;psapi.lib;wininet.lib;winhttp.lib</AdditionalDependencies>
+      <AdditionalDependencies>uafxcw.lib;common.lib;AvastSboxDll.lib;ntdll.lib;psapi.lib;wininet.lib;winhttp.lib</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
       <IgnoreSpecificDefaultLibraries>uafxcw.lib</IgnoreSpecificDefaultLibraries>
@@ -126,7 +126,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>uafxcw.lib;common.lib;SbieDll.lib;ntdll.lib;psapi.lib;wininet.lib;winhttp.lib</AdditionalDependencies>
+      <AdditionalDependencies>uafxcw.lib;common.lib;AvastSboxDll.lib;ntdll.lib;psapi.lib;wininet.lib;winhttp.lib</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
       <IgnoreSpecificDefaultLibraries>uafxcw.lib</IgnoreSpecificDefaultLibraries>
@@ -143,7 +143,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>uafxcw.lib;common.lib;SbieDll.lib;ntdll.lib;psapi.lib;wininet.lib;winhttp.lib</AdditionalDependencies>
+      <AdditionalDependencies>uafxcw.lib;common.lib;AvastSboxDll.lib;ntdll.lib;psapi.lib;wininet.lib;winhttp.lib</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
       <IgnoreSpecificDefaultLibraries>uafxcw.lib</IgnoreSpecificDefaultLibraries>
@@ -158,7 +158,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>uafxcw.lib;common.lib;SbieDll.lib;ntdll.lib;psapi.lib;wininet.lib;winhttp.lib</AdditionalDependencies>
+      <AdditionalDependencies>uafxcw.lib;common.lib;AvastSboxDll.lib;ntdll.lib;psapi.lib;wininet.lib;winhttp.lib</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
       <IgnoreSpecificDefaultLibraries>uafxcw.lib</IgnoreSpecificDefaultLibraries>

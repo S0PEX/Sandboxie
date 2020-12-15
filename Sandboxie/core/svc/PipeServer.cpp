@@ -232,7 +232,7 @@ bool PipeServer::Start()
     // create server port
     //
 
-    RtlInitUnicodeString(&PortName, SbieDll_PortName());
+    RtlInitUnicodeString(&PortName, AvastSboxDll_PortName());
 
     InitializeObjectAttributes(
         &objattrs, &PortName, OBJ_CASE_INSENSITIVE, NULL, sd);

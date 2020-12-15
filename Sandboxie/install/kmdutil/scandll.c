@@ -305,11 +305,11 @@ _FX ULONG Kmd_DoWindow(WCHAR *text, PGM *pgms, BOOLEAN silent)
     // create static text
     //
 
-    SbieDll_GetLanguage(&rtl);
+    AvastSboxDll_GetLanguage(&rtl);
     i = rtl ? WS_EX_LAYOUTRTL : 0;
 
     hStatic = CreateWindowEx(
-        i, L"STATIC", SbieDll_FormatMessage0(8106),
+        i, L"STATIC", AvastSboxDll_FormatMessage0(8106),
         SS_LEFT | WS_CHILD | WS_VISIBLE,
         5, 5, w - 15, 40, hWnd, NULL, NULL, NULL);
 
@@ -319,7 +319,7 @@ _FX ULONG Kmd_DoWindow(WCHAR *text, PGM *pgms, BOOLEAN silent)
     // create buttons
     //
 
-    wcscpy(text, SbieDll_FormatMessage0(3001));
+    wcscpy(text, AvastSboxDll_FormatMessage0(3001));
     for (i = 0; i < wcslen(text); ++i)
         if (text[i] == L'&')
             wmemmove(text + i, text + i + 1, wcslen(text + i));
@@ -340,7 +340,7 @@ _FX ULONG Kmd_DoWindow(WCHAR *text, PGM *pgms, BOOLEAN silent)
 
     SendMessage(hBtnOk, WM_SETFONT, (WPARAM)hFontVar, FALSE);
 
-    wcscpy(text, SbieDll_FormatMessage0(3002));
+    wcscpy(text, AvastSboxDll_FormatMessage0(3002));
     for (i = 0; i < wcslen(text); ++i)
         if (text[i] == L'&')
             wmemmove(text + i, text + i + 1, wcslen(text + i));

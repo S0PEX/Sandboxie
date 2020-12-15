@@ -245,7 +245,7 @@ void NetApiServer::LaunchSlave(ULONG len, const WCHAR *drive)
     STARTUPINFO si;
     WCHAR cmdline[128];
     wsprintf(cmdline, L"%s_NetProxy:Use=%c", SANDBOXIE, drive[0]);
-    if (! SbieDll_RunFromHome(SBIESVC_EXE, cmdline, &si, NULL))
+    if (! AvastSboxDll_RunFromHome(SBIESVC_EXE, cmdline, &si, NULL))
         return;
     WCHAR *ExePath = (WCHAR *)si.lpReserved;
 

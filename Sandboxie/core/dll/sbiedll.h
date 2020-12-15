@@ -67,48 +67,48 @@ PROCESS_DATA *my_findProcessData(WCHAR *name,int createNew);
 //---------------------------------------------------------------------------
 
 
-SBIEDLL_EXPORT  void *SbieDll_Hook(
+SBIEDLL_EXPORT  void *AvastSboxDll_Hook(
     const char *SourceFuncName, void *SourceFunc, void *DetourFunc);
 
 #define SBIEDLL_HOOK(pfx,proc)                  \
     *(ULONG_PTR *)&__sys_##proc = (ULONG_PTR)   \
-        SbieDll_Hook(#proc, proc, pfx##proc);   \
+        AvastSboxDll_Hook(#proc, proc, pfx##proc);   \
     if (! __sys_##proc) return FALSE;
 
-SBIEDLL_EXPORT  void SbieDll_DeviceChange(WPARAM wParam, LPARAM lParam);
+SBIEDLL_EXPORT  void AvastSboxDll_DeviceChange(WPARAM wParam, LPARAM lParam);
 
-SBIEDLL_EXPORT  const WCHAR *SbieDll_GetDrivePath(ULONG DriveIndex);
+SBIEDLL_EXPORT  const WCHAR *AvastSboxDll_GetDrivePath(ULONG DriveIndex);
 
-SBIEDLL_EXPORT  const WCHAR *SbieDll_GetUserPathEx(WCHAR which);
+SBIEDLL_EXPORT  const WCHAR *AvastSboxDll_GetUserPathEx(WCHAR which);
 
-SBIEDLL_EXPORT  BOOLEAN SbieDll_TranslateNtToDosPath(WCHAR *path);
+SBIEDLL_EXPORT  BOOLEAN AvastSboxDll_TranslateNtToDosPath(WCHAR *path);
 
-SBIEDLL_EXPORT  BOOLEAN SbieDll_StartSbieSvc(BOOLEAN retry);
+SBIEDLL_EXPORT  BOOLEAN AvastSboxDll_StartSbieSvc(BOOLEAN retry);
 
-SBIEDLL_EXPORT  const WCHAR *SbieDll_GetStartError(void);
+SBIEDLL_EXPORT  const WCHAR *AvastSboxDll_GetStartError(void);
 
-SBIEDLL_EXPORT  BOOLEAN SbieDll_GetServiceRegistryValue(
+SBIEDLL_EXPORT  BOOLEAN AvastSboxDll_GetServiceRegistryValue(
     const WCHAR *name, void *kvpi, ULONG sizeof_kvpi);
 
-SBIEDLL_EXPORT  ULONG SbieDll_GetLanguage(BOOLEAN *rtl);
+SBIEDLL_EXPORT  ULONG AvastSboxDll_GetLanguage(BOOLEAN *rtl);
 
-SBIEDLL_EXPORT  BOOLEAN SbieDll_KillOne(ULONG ProcessId);
+SBIEDLL_EXPORT  BOOLEAN AvastSboxDll_KillOne(ULONG ProcessId);
 
-SBIEDLL_EXPORT  BOOLEAN SbieDll_KillAll(
+SBIEDLL_EXPORT  BOOLEAN AvastSboxDll_KillAll(
     ULONG SessionId, const WCHAR *BoxName);
 
-SBIEDLL_EXPORT  ULONG SbieDll_GetTokenElevationType(void);
+SBIEDLL_EXPORT  ULONG AvastSboxDll_GetTokenElevationType(void);
 
-SBIEDLL_EXPORT  WCHAR *SbieDll_FormatMessage(ULONG code, const WCHAR **ins);
+SBIEDLL_EXPORT  WCHAR *AvastSboxDll_FormatMessage(ULONG code, const WCHAR **ins);
 
-SBIEDLL_EXPORT  WCHAR *SbieDll_FormatMessage0(ULONG code);
+SBIEDLL_EXPORT  WCHAR *AvastSboxDll_FormatMessage0(ULONG code);
 
-SBIEDLL_EXPORT  WCHAR *SbieDll_FormatMessage1(ULONG code, const WCHAR *ins1);
+SBIEDLL_EXPORT  WCHAR *AvastSboxDll_FormatMessage1(ULONG code, const WCHAR *ins1);
 
-SBIEDLL_EXPORT  WCHAR *SbieDll_FormatMessage2(
+SBIEDLL_EXPORT  WCHAR *AvastSboxDll_FormatMessage2(
     ULONG code, const WCHAR *ins1, const WCHAR *ins2);
 
-SBIEDLL_EXPORT  BOOL SbieDll_RunSandboxed(
+SBIEDLL_EXPORT  BOOL AvastSboxDll_RunSandboxed(
     const WCHAR *box_name, const WCHAR *cmd, const WCHAR *dir,
     ULONG creation_flags, STARTUPINFO *si, PROCESS_INFORMATION *pi);
 
@@ -117,35 +117,35 @@ SBIEDLL_EXPORT  BOOL SbieDll_RunSandboxed(
 //---------------------------------------------------------------------------
 
 
-SBIEDLL_EXPORT  const WCHAR *SbieDll_PortName(void);
+SBIEDLL_EXPORT  const WCHAR *AvastSboxDll_PortName(void);
 
-SBIEDLL_EXPORT  struct _MSG_HEADER *SbieDll_CallServer(
+SBIEDLL_EXPORT  struct _MSG_HEADER *AvastSboxDll_CallServer(
     struct _MSG_HEADER *req);
 
-SBIEDLL_EXPORT  void *SbieDll_CallServerQueue(
+SBIEDLL_EXPORT  void *AvastSboxDll_CallServerQueue(
 	const WCHAR* queue, void *req, ULONG req_len, ULONG rpl_min_len);
 
-SBIEDLL_EXPORT  void SbieDll_FreeMem(void *data);
+SBIEDLL_EXPORT  void AvastSboxDll_FreeMem(void *data);
 
-SBIEDLL_EXPORT  ULONG SbieDll_QueueCreate(
+SBIEDLL_EXPORT  ULONG AvastSboxDll_QueueCreate(
     const WCHAR *QueueName, HANDLE *out_EventHandle);
 
-SBIEDLL_EXPORT  ULONG SbieDll_QueueGetReq(
+SBIEDLL_EXPORT  ULONG AvastSboxDll_QueueGetReq(
     const WCHAR *QueueName, ULONG *out_ClientPid, ULONG *out_ClientTid,
     ULONG *out_RequestId, void **out_DataPtr, ULONG *out_DataLen);
 
-SBIEDLL_EXPORT  ULONG SbieDll_QueuePutRpl(
+SBIEDLL_EXPORT  ULONG AvastSboxDll_QueuePutRpl(
     const WCHAR *QueueName, ULONG RequestId, void *DataPtr, ULONG DataLen);
 
-SBIEDLL_EXPORT  ULONG SbieDll_QueuePutReq(
+SBIEDLL_EXPORT  ULONG AvastSboxDll_QueuePutReq(
     const WCHAR *QueueName, void *DataPtr, ULONG DataLen,
     ULONG *out_RequestId, HANDLE *out_EventHandle);
 
-SBIEDLL_EXPORT  ULONG SbieDll_QueueGetRpl(
+SBIEDLL_EXPORT  ULONG AvastSboxDll_QueueGetRpl(
     const WCHAR *QueueName, ULONG RequestId,
     void **out_DataPtr, ULONG *out_DataLen);
 
-SBIEDLL_EXPORT  ULONG SbieDll_UpdateConf(
+SBIEDLL_EXPORT  ULONG AvastSboxDll_UpdateConf(
     WCHAR OpCode, const WCHAR *Password, const WCHAR *Section,
     const WCHAR *Setting, const WCHAR *Value);
 
@@ -155,49 +155,49 @@ SBIEDLL_EXPORT  ULONG SbieDll_UpdateConf(
 //---------------------------------------------------------------------------
 
 
-SBIEDLL_EXPORT  BOOLEAN SbieDll_StartCOM(BOOLEAN Async);
+SBIEDLL_EXPORT  BOOLEAN AvastSboxDll_StartCOM(BOOLEAN Async);
 
-SBIEDLL_EXPORT  BOOLEAN SbieDll_IsOpenCOM(void);
+SBIEDLL_EXPORT  BOOLEAN AvastSboxDll_IsOpenCOM(void);
 
-SBIEDLL_EXPORT  BOOLEAN SbieDll_IsDirectory(const WCHAR *PathW);
+SBIEDLL_EXPORT  BOOLEAN AvastSboxDll_IsDirectory(const WCHAR *PathW);
 
-SBIEDLL_EXPORT  void *SbieDll_InitPStore(void);
+SBIEDLL_EXPORT  void *AvastSboxDll_InitPStore(void);
 
-SBIEDLL_EXPORT  ULONG SbieDll_GetHandlePath(
+SBIEDLL_EXPORT  ULONG AvastSboxDll_GetHandlePath(
     HANDLE FileHandle, WCHAR *OutWchar8192, BOOLEAN *IsBoxedPath);
 
-SBIEDLL_EXPORT  BOOLEAN SbieDll_RunFromHome(
+SBIEDLL_EXPORT  BOOLEAN AvastSboxDll_RunFromHome(
     const WCHAR *pgmName, const WCHAR *pgmArgs,
     STARTUPINFOW *si, PROCESS_INFORMATION *pi);
 
-SBIEDLL_EXPORT  WCHAR *SbieDll_AssocQueryCommand(const WCHAR *subj);
+SBIEDLL_EXPORT  WCHAR *AvastSboxDll_AssocQueryCommand(const WCHAR *subj);
 
-SBIEDLL_EXPORT  WCHAR *SbieDll_AssocQueryProgram(const WCHAR *subj);
+SBIEDLL_EXPORT  WCHAR *AvastSboxDll_AssocQueryProgram(const WCHAR *subj);
 
-SBIEDLL_EXPORT  BOOLEAN SbieDll_IsBoxedService(HANDLE hService);
+SBIEDLL_EXPORT  BOOLEAN AvastSboxDll_IsBoxedService(HANDLE hService);
 
-SBIEDLL_EXPORT  BOOL SbieDll_StartBoxedService(
+SBIEDLL_EXPORT  BOOL AvastSboxDll_StartBoxedService(
     const WCHAR *ServiceName, BOOLEAN WithAdd);
 
-SBIEDLL_EXPORT  HRESULT SbieDll_ComCreateProxy(
+SBIEDLL_EXPORT  HRESULT AvastSboxDll_ComCreateProxy(
     REFIID riid, void *pUnkOuter, void *pChannel, void **ppUnknown);
 
-SBIEDLL_EXPORT  HRESULT SbieDll_ComCreateStub(
+SBIEDLL_EXPORT  HRESULT AvastSboxDll_ComCreateStub(
     REFIID riid, void *pUnknown, void **ppStub, void **ppChannel);
 
-SBIEDLL_EXPORT  BOOLEAN SbieDll_IsOpenClsid(
+SBIEDLL_EXPORT  BOOLEAN AvastSboxDll_IsOpenClsid(
     REFCLSID rclsid, ULONG clsctx, const WCHAR *BoxName);
 
-SBIEDLL_EXPORT  void SbieDll_DisableElevationHook(void);
+SBIEDLL_EXPORT  void AvastSboxDll_DisableElevationHook(void);
 
-SBIEDLL_EXPORT  BOOLEAN SbieDll_RegisterDllCallback(void *Callback);
+SBIEDLL_EXPORT  BOOLEAN AvastSboxDll_RegisterDllCallback(void *Callback);
 
-SBIEDLL_EXPORT  BOOLEAN SbieDll_ExpandAndRunProgram(const WCHAR *Command);
+SBIEDLL_EXPORT  BOOLEAN AvastSboxDll_ExpandAndRunProgram(const WCHAR *Command);
 
 
-SBIEDLL_EXPORT  ULONG SbieDll_InjectLow_InitHelper();
-SBIEDLL_EXPORT  ULONG SbieDll_InjectLow_InitSyscalls(BOOLEAN drv_init);
-SBIEDLL_EXPORT  ULONG SbieDll_InjectLow(HANDLE hProcess, BOOLEAN is_wow64, BOOLEAN bHostInject, BOOLEAN dup_drv_handle);
+SBIEDLL_EXPORT  ULONG AvastSboxDll_InjectLow_InitHelper();
+SBIEDLL_EXPORT  ULONG AvastSboxDll_InjectLow_InitSyscalls(BOOLEAN drv_init);
+SBIEDLL_EXPORT  ULONG AvastSboxDll_InjectLow(HANDLE hProcess, BOOLEAN is_wow64, BOOLEAN bHostInject, BOOLEAN dup_drv_handle);
 
 //---------------------------------------------------------------------------
 

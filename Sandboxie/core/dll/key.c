@@ -348,7 +348,7 @@ _FX BOOLEAN Key_Init(void)
 
     InitializeCriticalSection(&Key_Handles_CritSec);
 
-    SbieDll_MatchPath(L'k', (const WCHAR *)-1);
+    AvastSboxDll_MatchPath(L'k', (const WCHAR *)-1);
 
     List_Init(&Key_Handles);
     List_Init(&Key_MergeCacheList);
@@ -866,7 +866,7 @@ _FX NTSTATUS Key_FixNameWow64_2(WCHAR **OutTruePath, WCHAR **OutCopyPath)
     req->KeyPath_len = TruePath_len;
     memcpy(req->KeyPath, TruePath, TruePath_len);
 
-    rpl = (FILE_OPEN_WOW64_KEY_RPL *)SbieDll_CallServer((MSG_HEADER *)req);
+    rpl = (FILE_OPEN_WOW64_KEY_RPL *)AvastSboxDll_CallServer((MSG_HEADER *)req);
     if (! rpl)
         status = STATUS_INSUFFICIENT_RESOURCES;
     else {
@@ -1138,7 +1138,7 @@ _FX NTSTATUS Key_NtCreateKeyImpl(
     // check if this is an open or closed path
     //
 
-    mp_flags = SbieDll_MatchPath(L'k', TruePath);
+    mp_flags = AvastSboxDll_MatchPath(L'k', TruePath);
 
     if (PATH_IS_CLOSED(mp_flags)) {
         status = STATUS_ACCESS_DENIED;
@@ -1910,7 +1910,7 @@ _FX ULONG Key_CheckDepthForIsWritePath(const WCHAR *TruePath)
             break;
         *ptr = L'\0';
 
-        mp_flags = SbieDll_MatchPath(L'k', copy);
+        mp_flags = AvastSboxDll_MatchPath(L'k', copy);
         if (PATH_NOT_WRITE(mp_flags))
             break;
 
@@ -2246,7 +2246,7 @@ _FX NTSTATUS Key_NtDeleteValueKey(
     if (! NT_SUCCESS(status))
         __leave;
 
-    mp_flags = SbieDll_MatchPath(L'k', TruePath);
+    mp_flags = AvastSboxDll_MatchPath(L'k', TruePath);
 
     if (PATH_IS_CLOSED(mp_flags)) {
         status = STATUS_ACCESS_DENIED;
@@ -3987,7 +3987,7 @@ _FX HANDLE Key_GetTrueHandle(HANDLE KeyHandle, BOOLEAN *pIsOpenPath)
         // check if this is an open or closed path
         //
 
-        ULONG mp_flags = SbieDll_MatchPath(L'k', TruePath);
+        ULONG mp_flags = AvastSboxDll_MatchPath(L'k', TruePath);
 
         if (PATH_IS_OPEN(mp_flags) && pIsOpenPath)
             *pIsOpenPath = TRUE;
@@ -4095,12 +4095,12 @@ _FX NTSTATUS Key_NtLoadKey(
         if (! NT_SUCCESS(status))
             __leave;
 
-        status = SbieDll_GetHandlePath(FileHandle, WorkPath, NULL);
+        status = AvastSboxDll_GetHandlePath(FileHandle, WorkPath, NULL);
 
         if (! NT_SUCCESS(status))
             __leave;
 
-        if (! SbieDll_TranslateNtToDosPath(WorkPath)) {
+        if (! AvastSboxDll_TranslateNtToDosPath(WorkPath)) {
             status = STATUS_ACCESS_DENIED;
             __leave;
         }
@@ -4142,7 +4142,7 @@ _FX NTSTATUS Key_NtLoadKey(
 
     if (NT_SUCCESS(status)) {
 
-        MSG_HEADER *rpl = SbieDll_CallServer(&req->h);
+        MSG_HEADER *rpl = AvastSboxDll_CallServer(&req->h);
         if (rpl) {
             status = rpl->status;
             Dll_Free(rpl);

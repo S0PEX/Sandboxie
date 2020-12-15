@@ -133,7 +133,7 @@ void Show_Error(WCHAR *Descr)
                   (LPTSTR)&ErrorText, 0, NULL);
 
     if (ErrorCode) {
-        WCHAR *SysErrText = SbieDll_FormatMessage0(MSG_3206);
+        WCHAR *SysErrText = AvastSboxDll_FormatMessage0(MSG_3206);
         wsprintf(msg, L"%s\n\n%s\n\n%s (%d)",
             Descr, SysErrText, ErrorText, ErrorCode);
         LocalFree(SysErrText);
@@ -160,7 +160,7 @@ void MyCoInitialize(void)
         extern HRESULT CoInitialize(void *);
         HRESULT hr = CoInitialize(NULL);
         if (hr != S_OK && hr != S_FALSE) {
-            Show_Error(SbieDll_FormatMessage(MSG_3213, NULL));
+            Show_Error(AvastSboxDll_FormatMessage(MSG_3213, NULL));
             die(EXIT_FAILURE);
         }
         init = TRUE;
@@ -188,13 +188,13 @@ void *CallSbieSvcGetUser(void)
 
         if (retries) {
 
-            SbieDll_StartSbieSvc(FALSE);
+            AvastSboxDll_StartSbieSvc(FALSE);
             Sleep(500);
         }
 
         req.h.msgid = MSGID_SBIE_INI_GET_USER;
         req.h.length = sizeof(SBIE_INI_GET_USER_REQ);
-        rpl = SbieDll_CallServer(&req.h);
+        rpl = AvastSboxDll_CallServer(&req.h);
 
         if (rpl)
             break;
@@ -218,7 +218,7 @@ BOOL Validate_Box_Name(void)
     if (! CallSbieSvcGetUser()) {
 
         WCHAR *errmsg =
-            SbieDll_FormatMessage1(MSG_2331, SbieDll_GetStartError());
+            AvastSboxDll_FormatMessage1(MSG_2331, AvastSboxDll_GetStartError());
         SetLastError(0);
         Show_Error(errmsg);
 
@@ -257,7 +257,7 @@ BOOL Validate_Box_Name(void)
                 ExitProcess(ERROR_UNKNOWN_PROPERTY);
 
             SetLastError(0);
-            Show_Error(SbieDll_FormatMessage1(MSG_3204, BoxName));
+            Show_Error(AvastSboxDll_FormatMessage1(MSG_3204, BoxName));
             return die(EXIT_FAILURE);
         }
     }
@@ -398,7 +398,7 @@ BOOL Parse_Command_Line(void)
         if (CallSbieSvcGetUser()) {
             req.length = sizeof(req);
             req.msgid  = MSGID_SBIE_INI_RUN_SBIE_CTRL;
-            rpl = SbieDll_CallServer(&req);
+            rpl = AvastSboxDll_CallServer(&req);
         }
         ExitProcess((rpl && rpl->status == 0) ? EXIT_SUCCESS : EXIT_FAILURE);
     }
@@ -457,7 +457,7 @@ BOOL Parse_Command_Line(void)
                     ExitProcess(ERROR_UNKNOWN_PROPERTY);
 
                 SetLastError(0);
-                Show_Error(SbieDll_FormatMessage1(MSG_3204, tmp));
+                Show_Error(AvastSboxDll_FormatMessage1(MSG_3204, tmp));
                 return FALSE;
             }
 
@@ -497,7 +497,7 @@ BOOL Parse_Command_Line(void)
                 env_name_len = 999;
             if (env_name_len > 128) {
                 SetLastError(0);
-                Show_Error(SbieDll_FormatMessage1(MSG_3202, save_cmd));
+                Show_Error(AvastSboxDll_FormatMessage1(MSG_3202, save_cmd));
                 return FALSE;
             }
 
@@ -509,7 +509,7 @@ BOOL Parse_Command_Line(void)
                 env_value_len = 999;
             if (env_value_len > 128) {
                 SetLastError(0);
-                Show_Error(SbieDll_FormatMessage1(MSG_3202, save_cmd));
+                Show_Error(AvastSboxDll_FormatMessage1(MSG_3202, save_cmd));
                 return FALSE;
             }
 
@@ -633,7 +633,7 @@ BOOL Parse_Command_Line(void)
 
         } else {
             SetLastError(0);
-            Show_Error(SbieDll_FormatMessage1(MSG_3202, cmd));
+            Show_Error(AvastSboxDll_FormatMessage1(MSG_3202, cmd));
             return FALSE;
         }
 
@@ -672,7 +672,7 @@ BOOL Parse_Command_Line(void)
 
         if (rc != S_OK) {
             SetLastError(0);
-            Show_Error(SbieDll_FormatMessage0(MSG_3209));
+            Show_Error(AvastSboxDll_FormatMessage0(MSG_3209));
             return FALSE;
         }
 
@@ -793,7 +793,7 @@ BOOL Parse_Command_Line(void)
 
     if (*cmd == L'\0') {
         SetLastError(0);
-        Show_Error(SbieDll_FormatMessage0(MSG_3203));
+        Show_Error(AvastSboxDll_FormatMessage0(MSG_3203));
         return FALSE;
     }
 
@@ -844,13 +844,13 @@ int Terminate_All_Processes(BOOL all_boxes)
             index = SbieApi_EnumBoxes(index, BoxName);
             if (index == -1)
                 break;
-            SbieDll_KillAll(-1, BoxName);
+            AvastSboxDll_KillAll(-1, BoxName);
         }
 
     } else {
 
         Validate_Box_Name();
-        SbieDll_KillAll(-1, BoxName);
+        AvastSboxDll_KillAll(-1, BoxName);
     }
 
     return EXIT_SUCCESS;
@@ -997,7 +997,7 @@ int Program_Start(void)
 
         if (process_was_registered && GetModuleHandle(L"oawatch.dll")) {
 
-            if (SbieDll_RunFromHome(START_EXE, cmdline, &si, &pi)) {
+            if (AvastSboxDll_RunFromHome(START_EXE, cmdline, &si, &pi)) {
 
                 ok = TRUE;
                 err = 0;
@@ -1145,7 +1145,7 @@ int Program_Start(void)
 
     if (ok && (! disable_force_on_this_program)) {
 
-        SbieDll_StartCOM(FALSE);
+        AvastSboxDll_StartCOM(FALSE);
     }
 
     //
@@ -1154,7 +1154,7 @@ int Program_Start(void)
 
     if (! ok) {
 
-        WCHAR *errmsg = SbieDll_FormatMessage1(MSG_3205, cmdline);
+        WCHAR *errmsg = AvastSboxDll_FormatMessage1(MSG_3205, cmdline);
         SetLastError(err);
         Show_Error(errmsg);
 
@@ -1207,7 +1207,7 @@ ULONG RestartInSandbox(void)
     }
 
     // we should have foreground rights at this point, but the second
-    // instance of Start.exe that we run through SbieDll_RunSandboxed
+    // instance of Start.exe that we run through AvastSboxDll_RunSandboxed
     // does not inherit our foreground rights automatically
 
     AllowSetForegroundWindow(ASFW_ANY);
@@ -1215,7 +1215,7 @@ ULONG RestartInSandbox(void)
     //
     // build command line.  note that we pass the current directory as an
     // environment variable which will be queried by Program_Start.  this
-    // is because SbieSvc ProcessServer (used by SbieDll_RunSandboxed)
+    // is because SbieSvc ProcessServer (used by AvastSboxDll_RunSandboxed)
     // does not necssarily share our dos device map, and will not be able
     // to change to a drive letter that isn't in its dos device map
     //
@@ -1247,7 +1247,7 @@ ULONG RestartInSandbox(void)
     //
     //
 
-    ok = SbieDll_RunSandboxed(BoxName, cmd, dir, 0, &si, &pi);
+    ok = AvastSboxDll_RunSandboxed(BoxName, cmd, dir, 0, &si, &pi);
     err = GetLastError();
 
     if (! ok) {
@@ -1255,7 +1255,7 @@ ULONG RestartInSandbox(void)
         if (err == ERROR_SERVER_DISABLED) {
 
             SetLastError(0);
-            Show_Error(SbieDll_FormatMessage0(MSG_3212));
+            Show_Error(AvastSboxDll_FormatMessage0(MSG_3212));
             return EXIT_FAILURE;
 
         } else {
@@ -1265,7 +1265,7 @@ ULONG RestartInSandbox(void)
     }
 
     if (! ok) {
-        WCHAR *errmsg = SbieDll_FormatMessage1(MSG_3205, ChildCmdLine);
+        WCHAR *errmsg = AvastSboxDll_FormatMessage1(MSG_3205, ChildCmdLine);
         SetLastError(err);
         Show_Error(errmsg);
 
@@ -1301,12 +1301,12 @@ int __stdcall WinMainCRTStartup(
     USHORT KeyState;
     STARTUPINFO si;
 
-    Sandboxie_Start_Title = SbieDll_FormatMessage0(MSG_3101);
-    SbieDll_GetLanguage(&layout_rtl);
+    Sandboxie_Start_Title = AvastSboxDll_FormatMessage0(MSG_3101);
+    AvastSboxDll_GetLanguage(&layout_rtl);
 
     wcscpy(BoxName, L"DefaultBox");
 
-    Token_Elevation_Type = SbieDll_GetTokenElevationType();
+    Token_Elevation_Type = AvastSboxDll_GetTokenElevationType();
 
     //
     // keep the nShowCmd flag that was passed to us

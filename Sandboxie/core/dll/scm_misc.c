@@ -156,7 +156,7 @@ _FX BOOLEAN Scm_SecHostDll(HMODULE module)
             return FALSE;
         }
 
-        ResPtr = SbieDll_Hook((char *)funcNamesAW[i].FuncNameA, SecPtr, AdvPtr);
+        ResPtr = AvastSboxDll_Hook((char *)funcNamesAW[i].FuncNameA, SecPtr, AdvPtr);
         if (! ResPtr)
             return FALSE;
     }

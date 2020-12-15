@@ -721,7 +721,7 @@ _FX void Gui_InitWindows7(void)
                 *pSourceFunc = *(ULONG_PTR *)target;
             }
 
-            *pSourceFunc = (ULONG_PTR)SbieDll_Hook(
+            *pSourceFunc = (ULONG_PTR)AvastSboxDll_Hook(
                 FuncName, (void *)(*pSourceFunc), DetourFunc);
         }
     }
@@ -1453,7 +1453,7 @@ _FX BOOLEAN Gui_CanForwardMsg(
 
     } else if (uMsg == WM_DEVICECHANGE) {
 
-        SbieDll_DeviceChange(wParam, lParam);
+        AvastSboxDll_DeviceChange(wParam, lParam);
 
     } else if (uMsg == WM_COPYDATA) {
 
@@ -1954,7 +1954,7 @@ _FX BOOL Gui_ConsoleControl(ULONG ctlcode, ULONG *data, ULONG_PTR unknown)
         // ctlcode 7 to terminate counterpart process.
         // data[0] specifies pid, data[1] specifies HWND
         //
-        BOOLEAN ok = SbieDll_KillOne(*data);
+        BOOLEAN ok = AvastSboxDll_KillOne(*data);
         if (ok)
             return STATUS_SUCCESS;
         SbieApi_Log(2205, L"ConsoleControl");
@@ -2009,7 +2009,7 @@ _FX BOOL Gui_UnregisterDeviceNotification(ULONG_PTR Handle)
 _FX void Gui_AllowSetForegroundWindow(void)
 {
     //
-    // this function is typically used prior to calling SbieDll_CallServer
+    // this function is typically used prior to calling AvastSboxDll_CallServer
     // in a scenario where SbieSvc might display a pop up window and we
     // want to let this window go to the foreground
     //
@@ -2489,7 +2489,7 @@ _FX void *Gui_CallProxyEx(
         }
     }
 
-    status = SbieDll_QueuePutReq(_QueueName, req, req_len, &req_id, &event);
+    status = AvastSboxDll_QueuePutReq(_QueueName, req, req_len, &req_id, &event);
     if (NT_SUCCESS(status)) {
 
         if (msgwait) {
@@ -2562,7 +2562,7 @@ _FX void *Gui_CallProxyEx(
 
     if (status == 0) {
 
-        status = SbieDll_QueueGetRpl(_QueueName, req_id, &data, &data_len);
+        status = AvastSboxDll_QueueGetRpl(_QueueName, req_id, &data, &data_len);
 
         if (NT_SUCCESS(status)) {
 

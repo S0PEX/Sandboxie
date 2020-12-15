@@ -114,7 +114,7 @@ void DoQuerySetting(void)
             break;
 
         if (expand)
-            SbieDll_TranslateNtToDosPath(value);
+            AvastSboxDll_TranslateNtToDosPath(value);
 
         printf("%S\n", value);
 

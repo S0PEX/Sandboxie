@@ -77,7 +77,7 @@
       <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>advapi32.lib;kernel32.lib;ntdll.lib;gdi32.lib;user32.lib;secur32.lib;psapi.lib;ole32.lib;wtsapi32.lib;SbieDll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>advapi32.lib;kernel32.lib;ntdll.lib;gdi32.lib;user32.lib;secur32.lib;psapi.lib;ole32.lib;wtsapi32.lib;AvastSboxDll.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='SbieDebug|x64'">
@@ -85,19 +85,19 @@
       <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>advapi32.lib;kernel32.lib;ntdll.lib;gdi32.lib;user32.lib;secur32.lib;psapi.lib;ole32.lib;wtsapi32.lib;SbieDll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>advapi32.lib;kernel32.lib;ntdll.lib;gdi32.lib;user32.lib;secur32.lib;psapi.lib;ole32.lib;wtsapi32.lib;AvastSboxDll.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='SbieRelease|Win32'">
     <ClCompile />
     <Link>
-      <AdditionalDependencies>advapi32.lib;kernel32.lib;ntdll.lib;gdi32.lib;user32.lib;secur32.lib;psapi.lib;ole32.lib;wtsapi32.lib;SbieDll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>advapi32.lib;kernel32.lib;ntdll.lib;gdi32.lib;user32.lib;secur32.lib;psapi.lib;ole32.lib;wtsapi32.lib;AvastSboxDll.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='SbieRelease|x64'">
     <ClCompile />
     <Link>
-      <AdditionalDependencies>advapi32.lib;kernel32.lib;ntdll.lib;gdi32.lib;user32.lib;secur32.lib;psapi.lib;ole32.lib;wtsapi32.lib;SbieDll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>advapi32.lib;kernel32.lib;ntdll.lib;gdi32.lib;user32.lib;secur32.lib;psapi.lib;ole32.lib;wtsapi32.lib;AvastSboxDll.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

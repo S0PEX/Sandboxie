@@ -36,7 +36,7 @@
 
 bool DriverAssist::InjectLow_Init()
 {
-	ULONG errlvl = SbieDll_InjectLow_InitHelper();
+	ULONG errlvl = AvastSboxDll_InjectLow_InitHelper();
     if (errlvl != 0) {
         LogEvent(MSG_9234, 0x9241, errlvl);
         return false;
@@ -81,7 +81,7 @@ void DriverAssist::InjectLow(void *_msg)
 	if (!bHostInject && SbieApi_QueryConfBool(boxname, L"NoSysCallHooks", FALSE))
 		bHostInject = 2;
 
-	errlvl = SbieDll_InjectLow(hProcess, msg->is_wow64, bHostInject, TRUE);
+	errlvl = AvastSboxDll_InjectLow(hProcess, msg->is_wow64, bHostInject, TRUE);
 	if(errlvl != 0)
 		goto finish;
 

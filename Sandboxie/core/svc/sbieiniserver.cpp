@@ -1524,7 +1524,7 @@ bool SbieIniServer::GetIniPath(WCHAR **IniPath, WCHAR **TmpPath,
         //
 
         STARTUPINFOW si;
-        if (SbieDll_RunFromHome(_ini, NULL, &si, NULL)) {
+        if (AvastSboxDll_RunFromHome(_ini, NULL, &si, NULL)) {
             WCHAR *path2 = (WCHAR *)si.lpReserved;
             wcscpy(path, path2);
             HeapFree(GetProcessHeap(), HEAP_GENERATE_EXCEPTIONS, path2);
@@ -1703,7 +1703,7 @@ MSG_HEADER *SbieIniServer::RunSbieCtrl(HANDLE idProcess, bool isSandboxed)
         else
             args = L" /open /sync";
 
-        if (SbieDll_RunFromHome(SBIECTRL_EXE, args, &si, NULL)) {
+        if (AvastSboxDll_RunFromHome(SBIECTRL_EXE, args, &si, NULL)) {
 
             WCHAR *CmdLine = (WCHAR *)si.lpReserved;
 

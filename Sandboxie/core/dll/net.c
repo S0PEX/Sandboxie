@@ -571,7 +571,7 @@ _FX BOOLEAN NetApi_Hook_NetUseAdd(HMODULE module)
     if (1) {
 
         extern const WCHAR *File_Mup;
-        ULONG mp_flags = SbieDll_MatchPath(L'f', File_Mup);
+        ULONG mp_flags = AvastSboxDll_MatchPath(L'f', File_Mup);
         if (PATH_IS_CLOSED(mp_flags))
             return TRUE;
     }
@@ -721,7 +721,7 @@ _FX ULONG NetApi_NetUseAdd(
             drive_number = (drive_letter - L'A');
     }
 
-    rpl = (NETAPI_USE_ADD_RPL *)SbieDll_CallServer(&req->h);
+    rpl = (NETAPI_USE_ADD_RPL *)AvastSboxDll_CallServer(&req->h);
 
     Dll_Free(req);
 
@@ -736,7 +736,7 @@ _FX ULONG NetApi_NetUseAdd(
     }
 
     if ((! err) && drive_number)
-        SbieDll_DeviceChange(0xAA00 + drive_number, tzuk);
+        AvastSboxDll_DeviceChange(0xAA00 + drive_number, tzuk);
 
     return err;
 
@@ -957,9 +957,9 @@ _FX HRESULT Net_Common_ImageNamePut(
     if (hFile != INVALID_HANDLE_VALUE) {
 
         BOOLEAN IsBoxedPath;
-        NTSTATUS status = SbieDll_GetHandlePath(hFile, path, &IsBoxedPath);
+        NTSTATUS status = AvastSboxDll_GetHandlePath(hFile, path, &IsBoxedPath);
         if (NT_SUCCESS(status) && IsBoxedPath) {
-            if (SbieDll_TranslateNtToDosPath(path)) {
+            if (AvastSboxDll_TranslateNtToDosPath(path)) {
 
                 ULONG len = wcslen(path);
                 wmemmove(path + 2, path, len + 1);

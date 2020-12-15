@@ -1574,7 +1574,7 @@ ALIGNED ULONG_PTR __cdecl Secure_HandleElevation(
 
     Gui_AllowSetForegroundWindow();
 
-    rpl = SbieDll_CallServer(&req.h);
+    rpl = AvastSboxDll_CallServer(&req.h);
 
     if ((! rpl) || (rpl->status != 0))
         SetEvent((HANDLE)pkt->hEvent);
@@ -1619,22 +1619,22 @@ ALIGNED ULONG_PTR Secure_RpcAsyncCompleteCall(
 
 
 //---------------------------------------------------------------------------
-// SbieDll_DisableElevationHook
+// AvastSboxDll_DisableElevationHook
 //---------------------------------------------------------------------------
 
 
-_FX void SbieDll_DisableElevationHook(void)
+_FX void AvastSboxDll_DisableElevationHook(void)
 {
     Secure_Elevation_HookDisabled = TRUE;
 }
 
 
 //---------------------------------------------------------------------------
-// SbieDll_GetPublicSecurityDescriptor
+// AvastSboxDll_GetPublicSecurityDescriptor
 //---------------------------------------------------------------------------
 
 
-/*_FX const void *SbieDll_GetPublicSecurityDescriptor(void)
+/*_FX const void *AvastSboxDll_GetPublicSecurityDescriptor(void)
 {
     if (! Secure_EveryoneSD)
         Secure_InitSecurityDescriptors();

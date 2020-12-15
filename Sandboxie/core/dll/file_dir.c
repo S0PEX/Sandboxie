@@ -2003,7 +2003,7 @@ _FX NTSTATUS File_NtCloseImpl(HANDLE FileHandle)
     status = pSysNtClose ? pSysNtClose(FileHandle) : NtClose(FileHandle);
 
     if (req) {
-        MSG_HEADER *rpl = SbieDll_CallServer(req);
+        MSG_HEADER *rpl = AvastSboxDll_CallServer(req);
         Dll_Free(req);
         if (rpl)
             Dll_Free(rpl);
@@ -3155,7 +3155,7 @@ _FX NTSTATUS File_NtQueryVolumeInformationFile(
 
     // NtQueryObject on a named pipe handle can hang when it is in pending read/write. See P.71 NT/2000 Native API Reference
     // If the caller only asks about FileFsDeviceInformation and it is a named pipe, hook can return right away without the 
-    // need to wait on NtQueryObject called by SbieDll_GetHandlePath
+    // need to wait on NtQueryObject called by AvastSboxDll_GetHandlePath
     if (FsInformationClass == FileFsDeviceInformation && Length >= sizeof(FILE_FS_DEVICE_INFORMATION))
     {
         FILE_FS_DEVICE_INFORMATION devInfo = { 0 };
@@ -3182,11 +3182,11 @@ _FX NTSTATUS File_NtQueryVolumeInformationFile(
 
     handle = FileHandle;
 
-    status = SbieDll_GetHandlePath(FileHandle, path, &IsBoxedPath);
+    status = AvastSboxDll_GetHandlePath(FileHandle, path, &IsBoxedPath);
     if (IsBoxedPath && (
             NT_SUCCESS(status) || (status == STATUS_BAD_INITIAL_PC))) {
 
-        status = SbieDll_GetHandlePath(FileHandle, path, NULL);
+        status = AvastSboxDll_GetHandlePath(FileHandle, path, NULL);
         if (NT_SUCCESS(status)) {
 
             const FILE_DRIVE *drive =
@@ -3388,7 +3388,7 @@ _FX NTSTATUS File_SetReparsePoint(
         req->dst_path_ofs = dst_ofs;
         req->dst_path_len = wcslen(dst_path) * sizeof(WCHAR);
 
-        rpl = SbieDll_CallServer(&req->h);
+        rpl = AvastSboxDll_CallServer(&req->h);
 
         Dll_Free(req);
 
@@ -3499,7 +3499,7 @@ _FX void File_DoAutoRecover_2(BOOLEAN force, ULONG ticks)
         MSG_HEADER req;
         req.length = sizeof(req);
         req.msgid = MSGID_FILE_GET_ALL_HANDLES;
-        rpl = (FILE_GET_ALL_HANDLES_RPL *)SbieDll_CallServer(&req);
+        rpl = (FILE_GET_ALL_HANDLES_RPL *)AvastSboxDll_CallServer(&req);
 
         if (rpl) {
             info = NULL;

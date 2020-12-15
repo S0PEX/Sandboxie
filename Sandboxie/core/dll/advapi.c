@@ -626,7 +626,7 @@ _FX BOOLEAN AdvApi_EnableDisableSRP(BOOLEAN Enable)
     // rules.  it passes the SAFER_TOKEN_NULL_IF_EQUAL flag and if
     // SaferComputeTokenFromLevel still returns a token, the new process
     // is aborted.  we hook SaferComputeTokenFromLevel so it can't interfere
-    // with SbieDll_RunFromHome
+    // with AvastSboxDll_RunFromHome
     //
 
     if (! AdvApi_Module)
@@ -687,7 +687,7 @@ DWORD Ntmarta_GetSecurityInfo(
 
 #define SBIEDLL_HOOK2(pfx,proc)                  \
     *(ULONG_PTR *)&__sys_##pfx##proc = (ULONG_PTR)   \
-    SbieDll_Hook(#proc, proc, pfx##proc);   \
+    AvastSboxDll_Hook(#proc, proc, pfx##proc);   \
     if (! __sys_##pfx##proc) return FALSE;
 
 _FX BOOLEAN Ntmarta_Init(HMODULE module)

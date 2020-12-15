@@ -73,7 +73,7 @@ typedef struct _COM_IUNKNOWN {
 // Functions
 //---------------------------------------------------------------------------
 
-BOOLEAN SbieDll_IsWow64();
+BOOLEAN AvastSboxDll_IsWow64();
 
 static BOOLEAN Com_IsFirewallClsid(REFCLSID rclsid, const WCHAR *BoxName);
 
@@ -274,11 +274,11 @@ static const GUID IID_INetFwRule = {
 
 
 //---------------------------------------------------------------------------
-// SbieDll_IsOpenClsid
+// AvastSboxDll_IsOpenClsid
 //---------------------------------------------------------------------------
 
 
-_FX BOOLEAN SbieDll_IsOpenClsid(
+_FX BOOLEAN AvastSboxDll_IsOpenClsid(
     REFCLSID rclsid, ULONG clsctx, const WCHAR *BoxName)
 {
     static const GUID CLSID_WinMgmt = {
@@ -514,7 +514,7 @@ _FX HRESULT Com_CoGetClassObject(
         return E_ACCESSDENIED;
     }
 
-    if ((! pServerInfo) && SbieDll_IsOpenClsid(rclsid, clsctx, NULL)) {
+    if ((! pServerInfo) && AvastSboxDll_IsOpenClsid(rclsid, clsctx, NULL)) {
 
         hr = Com_IClassFactory_New(rclsid, NULL, ppv);
 
@@ -556,7 +556,7 @@ _FX HRESULT Com_CoGetObject(
 
     if (_wcsnicmp(pszName, L"Elevation:Administrator!new:", 28) == 0) {
         if (__sys_IIDFromString(pszName + 28, &clsid) == 0) {
-            if (SbieDll_IsOpenClsid(&clsid, CLSCTX_LOCAL_SERVER, NULL))
+            if (AvastSboxDll_IsOpenClsid(&clsid, CLSCTX_LOCAL_SERVER, NULL))
                 IsOpenClsid = TRUE;
         }
     }
@@ -607,7 +607,7 @@ _FX HRESULT Com_CoCreateInstance(
         return E_ACCESSDENIED;
     }
 
-    if (SbieDll_IsOpenClsid(rclsid, clsctx, NULL)) {
+    if (AvastSboxDll_IsOpenClsid(rclsid, clsctx, NULL)) {
 
         hr = Com_IClassFactory_New(rclsid, NULL, (void **)&pFactory);
 
@@ -693,7 +693,7 @@ _FX HRESULT Com_CoCreateInstanceEx(
     // otherwise normal processing
     //
 
-    if (SbieDll_IsOpenClsid(rclsid, clsctx, NULL)) {
+    if (AvastSboxDll_IsOpenClsid(rclsid, clsctx, NULL)) {
 
         hr = Com_IClassFactory_New(rclsid, NULL, (void **)&pFactory);
         if (SUCCEEDED(hr)) {
@@ -1131,7 +1131,7 @@ _FX HRESULT Com_CoUnmarshalInterface_Common(
     // can invoke the remote interface unmarshalled in SbieSvc
     //
 
-    rpl = (COM_UNMARSHAL_INTERFACE_RPL *)SbieDll_CallServer(&req->h);
+    rpl = (COM_UNMARSHAL_INTERFACE_RPL *)AvastSboxDll_CallServer(&req->h);
 
     Com_Free(req);
 
@@ -1214,7 +1214,7 @@ static HRESULT Com_CoMarshalInterface(
         req.destctx = dwDestContext;
         req.mshlflags = mshlflags;
 
-        rpl = (COM_MARSHAL_INTERFACE_RPL *)SbieDll_CallServer(&req.h);
+        rpl = (COM_MARSHAL_INTERFACE_RPL *)AvastSboxDll_CallServer(&req.h);
 
         if (rpl) {
             hr = rpl->h.status;
@@ -1271,7 +1271,7 @@ _FX BOOLEAN Com_Init_ComBase(HMODULE module)
     GETPROCADDR_SYS(CoTaskMemAlloc);
     GETPROCADDR_SYS(IIDFromString);
 
-    if (!SbieDll_IsOpenCOM()) {
+    if (!AvastSboxDll_IsOpenCOM()) {
 
         SBIEDLL_HOOK(Com_, CoGetClassObject);
         if (!Dll_SkipHook(L"cocreate")) {
@@ -1289,7 +1289,7 @@ _FX BOOLEAN Com_Init_ComBase(HMODULE module)
         }
 
         SBIEDLL_HOOK(Com_, CoMarshalInterface);
-        SbieDll_IsOpenClsid(&IID_IUnknown, CLSCTX_LOCAL_SERVER, NULL);
+        AvastSboxDll_IsOpenClsid(&IID_IUnknown, CLSCTX_LOCAL_SERVER, NULL);
     }
     return TRUE;
 }
@@ -1320,7 +1320,7 @@ _FX BOOLEAN Com_Init_Ole32(HMODULE module)
     // other functions are still in ole32, even on Windows 8
     //
 
-    if (! SbieDll_IsOpenCOM()) {
+    if (! AvastSboxDll_IsOpenCOM()) {
 
         SBIEDLL_HOOK(Com_,CoGetObject);
     }
@@ -1572,7 +1572,7 @@ _FX HRESULT Com_CreateTypeInfo(REFIID riid, ITypeInfo **pTypeInfo)
 #ifndef _WIN64
 
     // 32-bit app can read x64 registry related to interface and typelib.
-    if (rc == ERROR_FILE_NOT_FOUND && SbieDll_IsWow64())
+    if (rc == ERROR_FILE_NOT_FOUND && AvastSboxDll_IsWow64())
     {
         rc = __sys_RegOpenKeyExW(HKEY_CLASSES_ROOT, path, 0, KEY_READ | KEY_WOW64_64KEY, &hkey);
     }
@@ -1644,7 +1644,7 @@ _FX HRESULT Com_CreateTypeInfo(REFIID riid, ITypeInfo **pTypeInfo)
 #ifndef _WIN64
 
         // 32-bit app can read x64 registry related to interface and typelib.
-        if (rc == ERROR_FILE_NOT_FOUND && SbieDll_IsWow64())
+        if (rc == ERROR_FILE_NOT_FOUND && AvastSboxDll_IsWow64())
         {
             rc = __sys_RegOpenKeyExW(HKEY_CLASSES_ROOT, path, 0, KEY_READ | KEY_WOW64_64KEY, &hkey);
 
@@ -1720,11 +1720,11 @@ _FX HRESULT Com_CreateTypeInfo(REFIID riid, ITypeInfo **pTypeInfo)
 
 
 //---------------------------------------------------------------------------
-// SbieDll_ComCreateProxy
+// AvastSboxDll_ComCreateProxy
 //---------------------------------------------------------------------------
 
 
-_FX HRESULT SbieDll_ComCreateProxy(
+_FX HRESULT AvastSboxDll_ComCreateProxy(
     REFIID riid, void *pUnkOuter, void *pChannel, void **ppUnknown)
 {
     HRESULT hr;
@@ -1848,7 +1848,7 @@ _FX HRESULT Com_CreateProxy(
 
             if (SUCCEEDED(hr)) {
 
-                hr = SbieDll_ComCreateProxy(
+                hr = AvastSboxDll_ComCreateProxy(
                             riid, pUnkOuter, pChannel, ppUnknown);
 
                 if (pChannel)
@@ -1889,11 +1889,11 @@ _FX HRESULT Com_CreateProxy(
 
 
 //---------------------------------------------------------------------------
-// SbieDll_ComCreateStub
+// AvastSboxDll_ComCreateStub
 //---------------------------------------------------------------------------
 
 
-_FX HRESULT SbieDll_ComCreateStub(
+_FX HRESULT AvastSboxDll_ComCreateStub(
     REFIID riid, void *pUnknown, void **ppStub, void **ppChannel)
 {
     HRESULT hr;
@@ -2011,7 +2011,7 @@ _FX void Com_IUnknown_Add_Ref_Release(COM_IUNKNOWN *This, UCHAR op)
     req->objidx = This->ObjIdx;
     req->op = op;
 
-    rpl = (COM_ADD_REF_RELEASE_RPL *)SbieDll_CallServer(&req->h);
+    rpl = (COM_ADD_REF_RELEASE_RPL *)AvastSboxDll_CallServer(&req->h);
 
     Com_Free(req);
 
@@ -2152,7 +2152,7 @@ _FX HRESULT Com_IClassFactory_CreateInstance(
     req->objidx = This->ObjIdx;
     memcpy(&req->iid, riid, sizeof(GUID));
 
-    rpl = (COM_CREATE_INSTANCE_RPL *)SbieDll_CallServer(&req->h);
+    rpl = (COM_CREATE_INSTANCE_RPL *)AvastSboxDll_CallServer(&req->h);
 
     Com_Free(req);
 
@@ -2221,7 +2221,7 @@ _FX HRESULT Com_IClassFactory_New(
     memcpy(&req->iid, &IID_IClassFactory, sizeof(GUID));
     req->elevate = (StringGUID != NULL);
 
-    rpl = (COM_GET_CLASS_OBJECT_RPL *)SbieDll_CallServer(&req->h);
+    rpl = (COM_GET_CLASS_OBJECT_RPL *)AvastSboxDll_CallServer(&req->h);
 
     Com_Free(req);
 
@@ -2310,7 +2310,7 @@ _FX HRESULT Com_OuterIUnknown_QueryInterface(
         // IGlobalInterfaceTable::RegisterInterfaceInGlobal and
         // perhaps other places.  if we issue a "query interface"
         // request to SbieSvc for this interface, it fails during
-        // SbieDll_ComCreateStub and might mess up the proxy object.
+        // AvastSboxDll_ComCreateStub and might mess up the proxy object.
         //
 
         return E_NOINTERFACE;
@@ -2325,7 +2325,7 @@ _FX HRESULT Com_OuterIUnknown_QueryInterface(
     req->objidx = This->ObjIdx;
     memcpy(&req->iid, riid, sizeof(GUID));
 
-    rpl = (COM_QUERY_INTERFACE_RPL *)SbieDll_CallServer(&req->h);
+    rpl = (COM_QUERY_INTERFACE_RPL *)AvastSboxDll_CallServer(&req->h);
 
     Com_Free(req);
 
@@ -2496,7 +2496,7 @@ _FX HRESULT Com_IRpcChannelBuffer_SendReceive(
     req->BufferLength = pMessage->BufferLength;
     memcpy(req->Buffer, pMessage->Buffer, pMessage->BufferLength);
 
-    rpl = (COM_INVOKE_METHOD_RPL *)SbieDll_CallServer(&req->h);
+    rpl = (COM_INVOKE_METHOD_RPL *)AvastSboxDll_CallServer(&req->h);
 
     Com_Free(req);
 
@@ -2535,7 +2535,7 @@ _FX HRESULT Com_IRpcChannelBuffer_SendReceive(
 
 
 //---------------------------------------------------------------------------
-// SbieDll_IRpcChannelBuffer_New
+// AvastSboxDll_IRpcChannelBuffer_New
 //---------------------------------------------------------------------------
 
 
@@ -2641,7 +2641,7 @@ _FX HRESULT Com_IMarshal_MarshalInterface(
     req.destctx = dwDestContext;
     req.mshlflags = mshlflags;
 
-    rpl = (COM_MARSHAL_INTERFACE_RPL *)SbieDll_CallServer(&req.h);
+    rpl = (COM_MARSHAL_INTERFACE_RPL *)AvastSboxDll_CallServer(&req.h);
 
     if (rpl) {
         hr = rpl->h.status;
@@ -2783,7 +2783,7 @@ _FX HRESULT Com_IClientSecurity_QueryBlanket(
     req.h.msgid = MSGID_COM_QUERY_BLANKET;
     req.objidx = This->ObjIdx;
 
-    rpl = (COM_QUERY_BLANKET_RPL *)SbieDll_CallServer(&req.h);
+    rpl = (COM_QUERY_BLANKET_RPL *)AvastSboxDll_CallServer(&req.h);
 
     if (rpl) {
         hr = rpl->h.status;
@@ -2868,7 +2868,7 @@ _FX HRESULT Com_IClientSecurity_SetBlanket(
         req.ServerPrincName[copy_len / sizeof(WCHAR)] = L'\0';
     }
 
-    rpl = (COM_SET_BLANKET_RPL *)SbieDll_CallServer(&req.h);
+    rpl = (COM_SET_BLANKET_RPL *)AvastSboxDll_CallServer(&req.h);
 
     if (rpl) {
         hr = rpl->h.status;
@@ -2906,7 +2906,7 @@ _FX HRESULT Com_IClientSecurity_CopyProxy(
     req.h.msgid = MSGID_COM_COPY_PROXY;
     req.objidx = This->ObjIdx;
 
-    rpl = (COM_COPY_PROXY_RPL *)SbieDll_CallServer(&req.h);
+    rpl = (COM_COPY_PROXY_RPL *)AvastSboxDll_CallServer(&req.h);
 
     if (rpl) {
         hr = rpl->h.status;

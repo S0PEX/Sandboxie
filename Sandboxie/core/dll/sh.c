@@ -42,11 +42,11 @@ static BOOL SH_OpenFolder(const WCHAR *PathW, WCHAR verb, HANDLE *hProcess);
 
 static WCHAR *SH32_AdjustPath(WCHAR *src, WCHAR **pArgs);
 
-static HKEY SbieDll_AssocQueryKeyWow64(const WCHAR *subj);
+static HKEY AvastSboxDll_AssocQueryKeyWow64(const WCHAR *subj);
 
 static BOOL SH32_ShellExecuteExW(SHELLEXECUTEINFOW *lpExecInfo);
 
-static WCHAR *SbieDll_AssocQueryCommandInternal(
+static WCHAR *AvastSboxDll_AssocQueryCommandInternal(
     const WCHAR *subj, const WCHAR *verb);
 
 static ULONG SH32_SHChangeNotifyRegister(
@@ -127,11 +127,11 @@ extern const WCHAR *File_BQQB;
 
 
 //---------------------------------------------------------------------------
-// SbieDll_IsDirectory
+// AvastSboxDll_IsDirectory
 //---------------------------------------------------------------------------
 
 
-_FX BOOLEAN SbieDll_IsDirectory(const WCHAR *PathW)
+_FX BOOLEAN AvastSboxDll_IsDirectory(const WCHAR *PathW)
 {
     NTSTATUS status;
     WCHAR *ntpath, *dummy;
@@ -328,7 +328,7 @@ _FX BOOL SH32_ShellExecuteExW(SHELLEXECUTEINFOW *lpExecInfo)
                 FreePath = TRUE;
         }
 
-        if (SbieDll_IsDirectory(path))
+        if (AvastSboxDll_IsDirectory(path))
             CallSystem = FALSE;
     }
 
@@ -875,7 +875,7 @@ _FX BOOLEAN SH32_Init(HMODULE module)
         if (__sys_LdrGetDllHandleEx) {
 
             *(ULONG_PTR *)&__sys_LdrGetDllHandleEx = (ULONG_PTR)
-                SbieDll_Hook("LdrGetDllHandleEx",
+                AvastSboxDll_Hook("LdrGetDllHandleEx",
                     __sys_LdrGetDllHandleEx, SH32_LdrGetDllHandleEx);
         }
 
@@ -929,11 +929,11 @@ _FX BOOLEAN SH32_Init(HMODULE module)
 
 
 //---------------------------------------------------------------------------
-// SbieDll_AssocQueryKeyWow64
+// AvastSboxDll_AssocQueryKeyWow64
 //---------------------------------------------------------------------------
 
 
-_FX HKEY SbieDll_AssocQueryKeyWow64(const WCHAR *subj)
+_FX HKEY AvastSboxDll_AssocQueryKeyWow64(const WCHAR *subj)
 {
     NTSTATUS status;
     OBJECT_ATTRIBUTES objattrs;
@@ -998,11 +998,11 @@ retry:
 
 
 //---------------------------------------------------------------------------
-// SbieDll_AssocQueryCommandInternal
+// AvastSboxDll_AssocQueryCommandInternal
 //---------------------------------------------------------------------------
 
 
-_FX WCHAR *SbieDll_AssocQueryCommandInternal(
+_FX WCHAR *AvastSboxDll_AssocQueryCommandInternal(
     const WCHAR *subj, const WCHAR *verb)
 {
     NTSTATUS status;
@@ -1023,7 +1023,7 @@ _FX WCHAR *SbieDll_AssocQueryCommandInternal(
 
     kvpi = Dll_Alloc(kvpi_len);
 
-    hkey = SbieDll_AssocQueryKeyWow64(subj);
+    hkey = AvastSboxDll_AssocQueryKeyWow64(subj);
 
     wcscpy(subkey, L"shell\\");
     wcscat(subkey, verb);
@@ -1062,7 +1062,7 @@ retry:
 
         NtClose(hkey);
 
-        hkey = SbieDll_AssocQueryKeyWow64((WCHAR *)kvpi->Data);
+        hkey = AvastSboxDll_AssocQueryKeyWow64((WCHAR *)kvpi->Data);
 
         goto retry;
     }
@@ -1128,32 +1128,32 @@ finish:
 
 
 //---------------------------------------------------------------------------
-// SbieDll_AssocQueryCommand
+// AvastSboxDll_AssocQueryCommand
 //---------------------------------------------------------------------------
 
 
-_FX WCHAR *SbieDll_AssocQueryCommand(const WCHAR *subj)
+_FX WCHAR *AvastSboxDll_AssocQueryCommand(const WCHAR *subj)
 {
-    WCHAR *cmd = SbieDll_AssocQueryCommandInternal(subj, L"open");
+    WCHAR *cmd = AvastSboxDll_AssocQueryCommandInternal(subj, L"open");
     if (! cmd)
-        cmd = SbieDll_AssocQueryCommandInternal(subj, L"cplopen");
+        cmd = AvastSboxDll_AssocQueryCommandInternal(subj, L"cplopen");
     return cmd;
 }
 
 
 //---------------------------------------------------------------------------
-// SbieDll_AssocQueryProgram
+// AvastSboxDll_AssocQueryProgram
 //---------------------------------------------------------------------------
 
 
-_FX WCHAR *SbieDll_AssocQueryProgram(const WCHAR *subj)
+_FX WCHAR *AvastSboxDll_AssocQueryProgram(const WCHAR *subj)
 {
     WCHAR *cmd, *buf;
     WCHAR *ptr, *ptr2;
     WCHAR ch;
     ULONG len;
 
-    cmd = SbieDll_AssocQueryCommand(subj);
+    cmd = AvastSboxDll_AssocQueryCommand(subj);
     if (! cmd)
         return NULL;
 

@@ -231,7 +231,7 @@ extern const WCHAR *Ipc_SandboxieRpcSs;
 
 _FX BOOLEAN Terminal_IsOpenPathIcaApi(void)
 {
-    ULONG mp_flags = SbieDll_MatchPath(L'i', L"\\RPC Control\\IcaApi");
+    ULONG mp_flags = AvastSboxDll_MatchPath(L'i', L"\\RPC Control\\IcaApi");
     return (PATH_IS_OPEN(mp_flags));
 }
 
@@ -370,7 +370,7 @@ _FX BOOLEAN Terminal_WinStationDisconnect(
 
     req.length = sizeof(MSG_HEADER);
     req.msgid = MSGID_TERMINAL_DISCONNECT;
-    rpl = SbieDll_CallServer(&req);
+    rpl = AvastSboxDll_CallServer(&req);
     if (! rpl)
         err = ERROR_GEN_FAILURE;
     else {
@@ -450,7 +450,7 @@ _FX BOOLEAN Terminal_WinStaQueryInformationW(
     req.info_class = InformationClass;
     req.data_len = InformationLength;
 
-    rpl = (TERMINAL_QUERY_INFO_RPL *)SbieDll_CallServer(&req.h);
+    rpl = (TERMINAL_QUERY_INFO_RPL *)AvastSboxDll_CallServer(&req.h);
     if (! rpl)
         err = ERROR_GEN_FAILURE;
     else {
@@ -496,7 +496,7 @@ _FX BOOLEAN Terminal_WinStationIsSessionRemoteable(
     req.h.msgid = MSGID_TERMINAL_CHECK_TYPE;
     req.check_is_remote = TRUE;
 
-    rpl = (TERMINAL_CHECK_TYPE_RPL *)SbieDll_CallServer(&req.h);
+    rpl = (TERMINAL_CHECK_TYPE_RPL *)AvastSboxDll_CallServer(&req.h);
     if (! rpl)
         err = ERROR_GEN_FAILURE;
     else {
@@ -542,7 +542,7 @@ _FX BOOLEAN Terminal_WinStationNameFromLogonIdW(
     req.h.length = sizeof(TERMINAL_GET_NAME_REQ);
     req.h.msgid = MSGID_TERMINAL_GET_NAME;
 
-    rpl = (TERMINAL_GET_NAME_RPL *)SbieDll_CallServer(&req.h);
+    rpl = (TERMINAL_GET_NAME_RPL *)AvastSboxDll_CallServer(&req.h);
     if (! rpl)
         err = ERROR_GEN_FAILURE;
     else {
@@ -582,7 +582,7 @@ _FX BOOLEAN Terminal_WinStationGetConnectionProperty(
     req.h.msgid = MSGID_TERMINAL_GET_PROPERTY;
     memcpy(&req.guid, TypeGuid, sizeof(GUID));
 
-    rpl = (TERMINAL_GET_PROPERTY_RPL *)SbieDll_CallServer(&req.h);
+    rpl = (TERMINAL_GET_PROPERTY_RPL *)AvastSboxDll_CallServer(&req.h);
     if (! rpl)
         err = ERROR_GEN_FAILURE;
     else {

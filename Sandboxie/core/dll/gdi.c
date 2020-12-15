@@ -395,9 +395,9 @@ _FX WCHAR *Gdi_GetFontPath(const WCHAR *path)
     if (hFile != INVALID_HANDLE_VALUE) {
 
         BOOLEAN is_copy;
-        NTSTATUS status = SbieDll_GetHandlePath(hFile, path1, &is_copy);
+        NTSTATUS status = AvastSboxDll_GetHandlePath(hFile, path1, &is_copy);
         if ((! NT_SUCCESS(status)) ||
-            (! SbieDll_TranslateNtToDosPath(path1))) {
+            (! AvastSboxDll_TranslateNtToDosPath(path1))) {
 
             wmemcpy(path1, path, path_len);
             path1[path_len] = L'\0';
@@ -414,7 +414,7 @@ _FX WCHAR *Gdi_GetFontPath(const WCHAR *path)
 
     path2 = File_TranslateDosToNtPath(path1);
     if (path2) {
-        ULONG mp_flags = SbieDll_MatchPath(L'f', path2);
+        ULONG mp_flags = AvastSboxDll_MatchPath(L'f', path2);
         if (PATH_IS_OPEN(mp_flags))
             SbieApi_Log(2205, L"Font Path %S", path1);
         Dll_Free(path2);
@@ -615,7 +615,7 @@ _FX void Gdi_AddFontsInBox(void)
 
             WCHAR *path1 = Dll_AllocTemp(8192);
             BOOLEAN is_copy = FALSE;
-            NTSTATUS status = SbieDll_GetHandlePath(hFile, path1, &is_copy);
+            NTSTATUS status = AvastSboxDll_GetHandlePath(hFile, path1, &is_copy);
             if (NT_SUCCESS(status) && is_copy) {
 
                 Gdi_AddFontsInBox_2(hFile, path1, WinFonts);

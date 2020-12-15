@@ -1910,12 +1910,12 @@ _FX NTSTATUS File_GetName_FromFileId(
 
         BOOLEAN IsBoxedPath;
         WCHAR *path = Dll_AllocTemp(8192);
-        status = SbieDll_GetHandlePath(
+        status = AvastSboxDll_GetHandlePath(
                     ObjectAttributes->RootDirectory, path, &IsBoxedPath);
         if (IsBoxedPath && (
                 NT_SUCCESS(status) || (status == STATUS_BAD_INITIAL_PC))) {
 
-            status = SbieDll_GetHandlePath(
+            status = AvastSboxDll_GetHandlePath(
                 ObjectAttributes->RootDirectory, path, NULL);
             if (NT_SUCCESS(status)) {
 
@@ -2120,7 +2120,7 @@ _FX ULONG File_MatchPath2(const WCHAR *path, ULONG *FileFlags, BOOLEAN bCheckObj
     // match path
     //
 
-    mp_flags = SbieDll_MatchPath2((FileFlags ? L'f' : L'p'), path, FALSE, TRUE);
+    mp_flags = AvastSboxDll_MatchPath2((FileFlags ? L'f' : L'p'), path, FALSE, TRUE);
 
     if (mp_flags)
         goto finish;
@@ -2135,7 +2135,7 @@ _FX ULONG File_MatchPath2(const WCHAR *path, ULONG *FileFlags, BOOLEAN bCheckObj
 
         WCHAR *path2 = File_FixPermLinksForMatchPath(path);
         if (path2) {
-            mp_flags = SbieDll_MatchPath2(L'f', path2, bCheckObjectExists, bMonitorLog);
+            mp_flags = AvastSboxDll_MatchPath2(L'f', path2, bCheckObjectExists, bMonitorLog);
             Dll_Free(path2);
 
             if (PATH_IS_WRITE(mp_flags)) {
@@ -2191,7 +2191,7 @@ _FX ULONG File_MatchPath2(const WCHAR *path, ULONG *FileFlags, BOOLEAN bCheckObj
         wmemcpy(path2, File_Mup, File_MupLen);
         wmemcpy(path2 + File_MupLen, ptr + 1, len1 + 1);
 
-        mp_flags = SbieDll_MatchPath2(L'f', path2, bCheckObjectExists, bMonitorLog);
+        mp_flags = AvastSboxDll_MatchPath2(L'f', path2, bCheckObjectExists, bMonitorLog);
 
         Dll_Free(path2);
     }
@@ -2449,7 +2449,7 @@ ReparseLoop:
                 // allow access unless it explicitly matches a closed path
                 //
 
-                mp_flags = SbieDll_MatchPath(L'p', TruePath);
+                mp_flags = AvastSboxDll_MatchPath(L'p', TruePath);
 
                 if (PATH_IS_CLOSED(mp_flags)) {
                     status = STATUS_ACCESS_DENIED;
@@ -4208,7 +4208,7 @@ _FX const BOOLEAN File_MigrateFile_ManualBypass(const WCHAR *TruePath, ULONGLONG
 	req.file_size = file_size;
 	wcscpy(req.file_path, TruePath);
 
-	rpl = SbieDll_CallServerQueue(INTERACTIVE_QUEUE_NAME, &req, sizeof(req), sizeof(*rpl));
+	rpl = AvastSboxDll_CallServerQueue(INTERACTIVE_QUEUE_NAME, &req, sizeof(req), sizeof(*rpl));
 	if (rpl)
 	{
 		ok = rpl->retval != 0;
@@ -4379,7 +4379,7 @@ _FX NTSTATUS File_CopyShortName(
             req->path_len = CopyPath_len;
             wcscpy(req->path, CopyPath);
 
-            rpl = SbieDll_CallServer(&req->h);
+            rpl = AvastSboxDll_CallServer(&req->h);
             if (rpl)
                 Dll_Free(rpl);
 
@@ -4415,7 +4415,7 @@ _FX NTSTATUS File_CopyShortName(
             req->path_len = CopyPath_len;
             wcscpy(req->path, CopyPath);
 
-            rpl = SbieDll_CallServer(&req->h);
+            rpl = AvastSboxDll_CallServer(&req->h);
             if (rpl)
                 Dll_Free(rpl);
 
@@ -4589,7 +4589,7 @@ _FX BOOLEAN File_AdjustShortName(
             req->path_len = CopyPath_len;
             wcscpy(req->path, CopyPath);
 
-            rpl = SbieDll_CallServer(&req->h);
+            rpl = AvastSboxDll_CallServer(&req->h);
             if (rpl)
                 Dll_Free(rpl);
 
@@ -5163,7 +5163,7 @@ _FX NTSTATUS File_NtQueryInformationFile(
             BOOLEAN IsBoxedPath;
             WCHAR *path = Dll_AllocTemp(8192);
             NTSTATUS status2 =
-                SbieDll_GetHandlePath(FileHandle, path, &IsBoxedPath);
+                AvastSboxDll_GetHandlePath(FileHandle, path, &IsBoxedPath);
             if (IsBoxedPath && (NT_SUCCESS(status2)
                                     || (status2 == STATUS_BAD_INITIAL_PC))) {
 
@@ -5252,7 +5252,7 @@ _FX NTSTATUS File_NtQueryInformationFile(
             // otherwise we do normal drive letter processing
             //
 
-            SbieDll_TranslateNtToDosPath(TruePath);
+            AvastSboxDll_TranslateNtToDosPath(TruePath);
             TruePathLen = wcslen(TruePath);
             if (TruePathLen >= 2 && TruePath[1] == L':') {
                 if (TruePathLen == 2)
@@ -5313,7 +5313,7 @@ _FX ULONG File_GetFinalPathNameByHandleW(
     BOOLEAN IsBoxedPath;
 
     path = Dll_AllocTemp(8192);
-    status = SbieDll_GetHandlePath(hFile, path, &IsBoxedPath);
+    status = AvastSboxDll_GetHandlePath(hFile, path, &IsBoxedPath);
     if (IsBoxedPath &&
             (NT_SUCCESS(status) || (status == STATUS_BAD_INITIAL_PC))) {
 
@@ -5321,7 +5321,7 @@ _FX ULONG File_GetFinalPathNameByHandleW(
         // the specified file is inside the sandbox, so handle the request
         //
 
-        status = SbieDll_GetHandlePath(hFile, path, NULL);
+        status = AvastSboxDll_GetHandlePath(hFile, path, NULL);
         if (! NT_SUCCESS(status)) {
 
             rc = 0;
@@ -6026,7 +6026,7 @@ _FX NTSTATUS File_SetAttributes(
             req->path_len = CopyPath_len;
             wcscpy(req->path, CopyPath);
 
-            rpl = SbieDll_CallServer(&req->h);
+            rpl = AvastSboxDll_CallServer(&req->h);
             if (rpl) {
                 status = rpl->status;
                 Dll_Free(rpl);
@@ -6111,7 +6111,7 @@ _FX NTSTATUS File_SetDisposition(
                     ULONG len = wcslen(TruePath);
                     DosPath = Dll_AllocTemp((len + 8) * sizeof(WCHAR));
                     wmemcpy(DosPath, TruePath, len + 1);
-                    if (SbieDll_TranslateNtToDosPath(DosPath)) {
+                    if (AvastSboxDll_TranslateNtToDosPath(DosPath)) {
                         len = wcslen(DosPath);
                         wmemmove(DosPath + 4, DosPath, len + 1);
                         wmemcpy(DosPath, File_BQQB, 4);
@@ -6788,11 +6788,11 @@ _FX HANDLE File_GetTrueHandle(HANDLE FileHandle, BOOLEAN *pIsOpenPath)
 
 
 //---------------------------------------------------------------------------
-// SbieDll_GetHandlePath
+// AvastSboxDll_GetHandlePath
 //---------------------------------------------------------------------------
 
 
-_FX ULONG SbieDll_GetHandlePath(
+_FX ULONG AvastSboxDll_GetHandlePath(
     HANDLE FileHandle, WCHAR *OutWchar8192, BOOLEAN *IsBoxedPath)
 {
     THREAD_DATA *TlsData = Dll_GetTlsData(NULL);
@@ -6802,7 +6802,7 @@ _FX ULONG SbieDll_GetHandlePath(
     WCHAR *TruePath;
     WCHAR *CopyPath;
 
-    SbieDll_GetDrivePath(0);            // initialize drives
+    AvastSboxDll_GetDrivePath(0);            // initialize drives
 
     Dll_PushTlsNameBuffer(TlsData);
 
@@ -6845,11 +6845,11 @@ _FX ULONG SbieDll_GetHandlePath(
 
 
 //---------------------------------------------------------------------------
-// SbieDll_GetDrivePath
+// AvastSboxDll_GetDrivePath
 //---------------------------------------------------------------------------
 
 
-_FX const WCHAR *SbieDll_GetDrivePath(ULONG DriveIndex)
+_FX const WCHAR *AvastSboxDll_GetDrivePath(ULONG DriveIndex)
 {
     if ((! File_Drives) || (DriveIndex == -1)) {
         File_InitDrives(0xFFFFFFFF);
@@ -6865,11 +6865,11 @@ _FX const WCHAR *SbieDll_GetDrivePath(ULONG DriveIndex)
 
 
 //---------------------------------------------------------------------------
-// SbieDll_GetUserPathEx
+// AvastSboxDll_GetUserPathEx
 //---------------------------------------------------------------------------
 
 
-_FX const WCHAR *SbieDll_GetUserPathEx(WCHAR which)
+_FX const WCHAR *AvastSboxDll_GetUserPathEx(WCHAR which)
 {
     if (! Dll_SidString) {
 
@@ -6884,7 +6884,7 @@ _FX const WCHAR *SbieDll_GetUserPathEx(WCHAR which)
 
     if (! File_CurrentUser) {
 
-        SbieDll_GetDrivePath(0);            // initialize drives
+        AvastSboxDll_GetDrivePath(0);            // initialize drives
         File_InitUsers();
     }
 
@@ -6900,11 +6900,11 @@ _FX const WCHAR *SbieDll_GetUserPathEx(WCHAR which)
 
 
 //---------------------------------------------------------------------------
-// SbieDll_TranslateNtToDosPath
+// AvastSboxDll_TranslateNtToDosPath
 //---------------------------------------------------------------------------
 
 
-_FX BOOLEAN SbieDll_TranslateNtToDosPath(WCHAR *path)
+_FX BOOLEAN AvastSboxDll_TranslateNtToDosPath(WCHAR *path)
 {
     const FILE_DRIVE *drive;
     ULONG path_len, prefix_len;
@@ -6914,7 +6914,7 @@ _FX BOOLEAN SbieDll_TranslateNtToDosPath(WCHAR *path)
         File_DrivesAndLinks_CritSec = Dll_Alloc(sizeof(CRITICAL_SECTION));
         InitializeCriticalSectionAndSpinCount(
             File_DrivesAndLinks_CritSec, 1000);
-        SbieDll_GetDrivePath(0);            // initialize drives
+        AvastSboxDll_GetDrivePath(0);            // initialize drives
     }
 
     if (_wcsnicmp(path, File_Mup, File_MupLen) == 0) {
@@ -7008,7 +7008,7 @@ _FX WCHAR *File_GetTruePathForBoxedPath(const WCHAR *Path, BOOLEAN IsDosPath)
 
             if (NT_SUCCESS(status)) {
                 if (IsDosPath) {
-                    if (! SbieDll_TranslateNtToDosPath(TruePath))
+                    if (! AvastSboxDll_TranslateNtToDosPath(TruePath))
                         TruePath = NULL;
                 }
             } else
@@ -7033,11 +7033,11 @@ _FX WCHAR *File_GetTruePathForBoxedPath(const WCHAR *Path, BOOLEAN IsDosPath)
 
 
 //---------------------------------------------------------------------------
-// SbieDll_DeviceChange
+// AvastSboxDll_DeviceChange
 //---------------------------------------------------------------------------
 
 
-_FX void SbieDll_DeviceChange(WPARAM wParam, LPARAM lParam)
+_FX void AvastSboxDll_DeviceChange(WPARAM wParam, LPARAM lParam)
 {
     static ULONG LastTickCount = 0;
     static ULONG LastWParam    = 0;

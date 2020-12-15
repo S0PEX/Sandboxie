@@ -294,7 +294,7 @@ _FX void File_InitPathList(void)
     if (handle)
         NtClose(handle);
 
-    SbieDll_MatchPath(L'f', (const WCHAR *)-1);
+    AvastSboxDll_MatchPath(L'f', (const WCHAR *)-1);
 
     //
     // query Sandboxie home folder to prevent ClosedFilePath
@@ -1610,7 +1610,7 @@ _FX void File_GetSetDeviceMap(WCHAR *DeviceMap96)
     //
     // a sandboxed process starting under the SYSTEM account does not
     // have the local DosDevices directory that it parent, Start.exe,
-    // had.  but SbieDll may have recorded the directory, and we
+    // had.  but AvastSboxDll may have recorded the directory, and we
     // can now restore it
     //
     // note:  the new processes initially inherits the device map of
@@ -1647,7 +1647,7 @@ _FX void File_GetSetDeviceMap(WCHAR *DeviceMap96)
             req.h.msgid = MSGID_PROCESS_OPEN_DEVICE_MAP;
             req.DirectoryHandlePtr = (ULONG_PTR)&info.Set.DirectoryHandle;
             wcscpy(req.DirectoryName, DeviceMap96);
-            rpl = SbieDll_CallServer(&req.h);
+            rpl = AvastSboxDll_CallServer(&req.h);
             if (rpl) {
                 status = rpl->status;
                 Dll_Free(rpl);
@@ -1677,7 +1677,7 @@ _FX void File_GetSetDeviceMap(WCHAR *DeviceMap96)
                 req.h.msgid = MSGID_PROCESS_SET_DEVICE_MAP;
                 req.DirectoryHandle =
                             (ULONG64)(ULONG_PTR)info.Set.DirectoryHandle;
-                rpl = SbieDll_CallServer(&req.h);
+                rpl = AvastSboxDll_CallServer(&req.h);
                 if (! rpl)
                     status = STATUS_SERVER_DISABLED;
                 else {
@@ -1763,7 +1763,7 @@ _FX void File_InitSnapshots(void)
 	WCHAR ShapshotsIni[MAX_PATH] = { 0 };
 	wcscpy(ShapshotsIni, Dll_BoxFilePath);
 	wcscat(ShapshotsIni, L"\\Snapshots.ini");
-	SbieDll_TranslateNtToDosPath(ShapshotsIni);
+	AvastSboxDll_TranslateNtToDosPath(ShapshotsIni);
 
 	WCHAR Shapshot[16] = { 0 };
 	GetPrivateProfileStringW(L"Current", L"Snapshot", L"", Shapshot, 16, ShapshotsIni);

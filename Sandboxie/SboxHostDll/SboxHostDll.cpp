@@ -127,9 +127,9 @@ BOOL SboxHostDll_OpenProcessToken(HANDLE ProcessHandle, DWORD DesiredAccess, PHA
     return bRet;
 }
 
-BOOLEAN InitHook( HINSTANCE hSbieDll )
+BOOLEAN InitHook( HINSTANCE hAvastSboxDll )
 {
-    if (hSbieDll)
+    if (hAvastSboxDll)
     {
         HMODULE hAdvapi32 = GetModuleHandle(L"Advapi32.dll");
 

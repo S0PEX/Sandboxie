@@ -10,7 +10,7 @@ Please note: there is another ReadMe.txt in the \install\ folder that explains h
 
 Source Projects (in aplhabetical order)
 
-Note: the core of Sandboxie are the driver, SbieDrv, the service, SbieSvc, and the injection DLL, SbieDll. Study these projects first.
+Note: the core of Sandboxie are the driver, SbieDrv, the service, SbieSvc, and the injection DLL, AvastSboxDll. Study these projects first.
 
 Common (\apps\common). This builds common.lib which is used by the Control and Start projects. It contains some common GUI objects.
 

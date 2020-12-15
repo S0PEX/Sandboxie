@@ -360,7 +360,7 @@ _FX void ComServer_RestartProgram(const WCHAR *arg)
     StartupInfo.cb = sizeof(STARTUPINFO);
     StartupInfo.dwFlags = STARTF_FORCEOFFFEEDBACK;
 
-    SbieDll_RunSandboxed(ComServer_BoxName, cmd, dir, 0,
+    AvastSboxDll_RunSandboxed(ComServer_BoxName, cmd, dir, 0,
                          &StartupInfo, &ProcessInformation);
 }
 

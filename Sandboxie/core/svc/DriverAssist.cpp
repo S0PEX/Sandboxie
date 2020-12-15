@@ -127,7 +127,7 @@ bool DriverAssist::InitializePortAndThreads()
     //
 
     wsprintf(PortName, L"%s-internal-%d",
-             SbieDll_PortName(), GetTickCount());
+             AvastSboxDll_PortName(), GetTickCount());
     RtlInitUnicodeString(&objname, PortName);
 
     InitializeObjectAttributes(

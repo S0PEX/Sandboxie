@@ -181,7 +181,7 @@ _FX BOOLEAN Ipc_StartServer(const WCHAR *TruePath, BOOLEAN Async)
 					//
 					const WCHAR* box_name = SbieApi_QueryConfBool(NULL, L"ProtectRpcSs", FALSE) ? L"*SYSTEM*" : L"*THREAD*";
 
-                    if (! SbieDll_RunSandboxed(box_name, fullpath, homedir, 0, &si, &pi))
+                    if (! AvastSboxDll_RunSandboxed(box_name, fullpath, homedir, 0, &si, &pi))
                         errnum = GetLastError();
                     else
                         errnum = -1;
@@ -197,7 +197,7 @@ _FX BOOLEAN Ipc_StartServer(const WCHAR *TruePath, BOOLEAN Async)
                 // (SandboxieRpcSs has to be parent of SandboxieDcomLaunch)
                 //
 
-                if (! SbieDll_RunFromHome(program, NULL, &si, &pi))
+                if (! AvastSboxDll_RunFromHome(program, NULL, &si, &pi))
                     errnum = GetLastError();
                 else
                     errnum = -1;
@@ -312,7 +312,7 @@ _FX BOOLEAN Ipc_StartServer(const WCHAR *TruePath, BOOLEAN Async)
         // is not available (i.e. Windows pre XP SP 2)
         //
 
-        if (service == _rpcss && (! SbieDll_IsOpenCOM())) {
+        if (service == _rpcss && (! AvastSboxDll_IsOpenCOM())) {
 
             HANDLE hKey = Scm_OpenKeyForService(_dcomlaunch, FALSE);
             if (hKey) {
@@ -383,11 +383,11 @@ _FX DWORD Ipc_StartServer_Thread(const WCHAR *TruePath)
 
 
 //---------------------------------------------------------------------------
-// SbieDll_StartCOM
+// AvastSboxDll_StartCOM
 //---------------------------------------------------------------------------
 
 
-_FX BOOLEAN SbieDll_StartCOM(BOOLEAN Async)
+_FX BOOLEAN AvastSboxDll_StartCOM(BOOLEAN Async)
 {
     if (Dll_ImageType == DLL_IMAGE_SANDBOXIE_RPCSS ||
         Dll_ImageType == DLL_IMAGE_SANDBOXIE_DCOMLAUNCH ||
@@ -409,17 +409,17 @@ _FX BOOLEAN SbieDll_StartCOM(BOOLEAN Async)
 
 
 //---------------------------------------------------------------------------
-// SbieDll_IsOpenCOM
+// AvastSboxDll_IsOpenCOM
 //---------------------------------------------------------------------------
 
 
-_FX BOOLEAN SbieDll_IsOpenCOM(void)
+_FX BOOLEAN AvastSboxDll_IsOpenCOM(void)
 {
     static BOOLEAN init_flag = FALSE;
     static BOOLEAN open_flag = FALSE;
 
     if (! init_flag) {
-        ULONG mp_flags = SbieDll_MatchPath(L'i', Ipc_epmapper);
+        ULONG mp_flags = AvastSboxDll_MatchPath(L'i', Ipc_epmapper);
         if (PATH_IS_OPEN(mp_flags))
             open_flag = TRUE;
         init_flag = TRUE;

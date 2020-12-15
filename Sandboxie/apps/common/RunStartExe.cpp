@@ -52,7 +52,7 @@ void Common_RunStartExe(
     if (inherit)
         si.lpReserved = (LPTSTR)1;
 
-    if (! SbieDll_RunFromHome(START_EXE, cmdline, &si, &pi)) {
+    if (! AvastSboxDll_RunFromHome(START_EXE, cmdline, &si, &pi)) {
 
         ULONG ErrorCode = GetLastError();
         WCHAR *msg = (WCHAR *)LocalAlloc(LMEM_FIXED, 2560 * sizeof(WCHAR));

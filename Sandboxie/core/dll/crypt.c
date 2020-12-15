@@ -204,7 +204,7 @@ _FX BOOL Crypt_CryptUnprotectData(
     Crypt_InitPromptData(req, pPromptStruct);
 
     rpl = (COM_CRYPT_PROTECT_DATA_RPL *)
-                                SbieDll_CallServer((MSG_HEADER *)req);
+                                AvastSboxDll_CallServer((MSG_HEADER *)req);
     Dll_Free(req);
 
     if (! rpl)
@@ -318,7 +318,7 @@ _FX BOOL Crypt_CryptProtectData(
     Crypt_InitPromptData(req, pPromptStruct);
 
     rpl = (COM_CRYPT_PROTECT_DATA_RPL *)
-                                SbieDll_CallServer((MSG_HEADER *)req);
+                                AvastSboxDll_CallServer((MSG_HEADER *)req);
     Dll_Free(req);
 
     if (! rpl)
@@ -366,7 +366,7 @@ _FX BOOL Crypt_CertGetCertificateChain(
     HANDLE hEvent = Ipc_GetServerEvent(Scm_CryptSvc, &event_created);
     if (hEvent) {
         if (event_created)
-            if (SbieDll_StartBoxedService(Scm_CryptSvc, FALSE))
+            if (AvastSboxDll_StartBoxedService(Scm_CryptSvc, FALSE))
                 WaitForSingleObject(hEvent, 8 * 1000);
         CloseHandle(hEvent);
     }

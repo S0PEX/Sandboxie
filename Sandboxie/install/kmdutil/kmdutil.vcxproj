@@ -79,7 +79,7 @@
       <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libucrt.lib;libvcruntime.lib;ntdll.lib;psapi.lib;SbieDll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libucrt.lib;libvcruntime.lib;ntdll.lib;psapi.lib;AvastSboxDll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
     </Link>
@@ -90,7 +90,7 @@
       <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libucrt.lib;libvcruntime.lib;ntdll.lib;psapi.lib;SbieDll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libucrt.lib;libvcruntime.lib;ntdll.lib;psapi.lib;AvastSboxDll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
     </Link>
@@ -103,7 +103,7 @@
       <OmitFramePointers />
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libucrt.lib;libvcruntime.lib;ntdll.lib;psapi.lib;SbieDll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libucrt.lib;libvcruntime.lib;ntdll.lib;psapi.lib;AvastSboxDll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
     </Link>
@@ -116,7 +116,7 @@
       </FunctionLevelLinking>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libucrt.lib;libvcruntime.lib;ntdll.lib;psapi.lib;SbieDll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libucrt.lib;libvcruntime.lib;ntdll.lib;psapi.lib;AvastSboxDll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
     </Link>

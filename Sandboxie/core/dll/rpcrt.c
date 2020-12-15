@@ -390,7 +390,7 @@ WCHAR *GetSCardLpcPortName()
     req.h.msgid = MSGID_EPMAPPER_GET_PORT_NAME;
     memcpy(&req.ifidRequest, &ifidRequest, sizeof(RPC_IF_ID));
 
-    rpl = (EPMAPPER_GET_PORT_NAME_RPL *)SbieDll_CallServer(&req.h);
+    rpl = (EPMAPPER_GET_PORT_NAME_RPL *)AvastSboxDll_CallServer(&req.h);
 
     if (rpl)
     {
@@ -476,7 +476,7 @@ _FX RPC_STATUS RpcRt_RpcBindingCreateW(
                     req.h.msgid = MSGID_EPMAPPER_GET_PORT_NAME;
                     memcpy(&req.ifidRequest, &ifidRequest, sizeof(RPC_IF_ID));
 
-                    rpl = (EPMAPPER_GET_PORT_NAME_RPL *)SbieDll_CallServer(&req.h);
+                    rpl = (EPMAPPER_GET_PORT_NAME_RPL *)AvastSboxDll_CallServer(&req.h);
 
                     if (rpl) {
 

@@ -383,7 +383,7 @@ static const WCHAR *_TrustedInstaller = L"TrustedInstaller";
 
 #define SBIEDLL_HOOK_SCM(proc)                              \
     *(ULONG_PTR *)&__sys_##proc = (ULONG_PTR)               \
-        SbieDll_Hook(#proc, __sys_##proc, Scm_##proc);      \
+        AvastSboxDll_Hook(#proc, __sys_##proc, Scm_##proc);      \
     if (! __sys_##proc) return FALSE;
 
 
@@ -991,7 +991,7 @@ _FX WCHAR *Scm_GetAllServices(void)
     req.type_filter = SERVICE_TYPE_ALL;
     req.state_filter = SERVICE_STATE_ALL;
 
-    rpl = (SERVICE_LIST_RPL *)SbieDll_CallServer(&req.h);
+    rpl = (SERVICE_LIST_RPL *)AvastSboxDll_CallServer(&req.h);
     if (rpl && rpl->h.status == 0) {
         true_names = rpl->names;
         free_true_names = FALSE;
@@ -1187,11 +1187,11 @@ _FX int Scm_Start_Sppsvc()
 }
 
 //---------------------------------------------------------------------------
-// SbieDll_IsBoxedService
+// AvastSboxDll_IsBoxedService
 //---------------------------------------------------------------------------
 
 
-_FX BOOLEAN SbieDll_IsBoxedService(HANDLE hService)
+_FX BOOLEAN AvastSboxDll_IsBoxedService(HANDLE hService)
 {
     WCHAR *ServiceName = Scm_GetHandleName(hService);
     if (! ServiceName)

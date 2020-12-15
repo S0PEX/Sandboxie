@@ -158,7 +158,7 @@ extern const WCHAR *Pst_OpenProtectedStorage;
     *(ULONG_PTR *)&__sys_##proc = (ULONG_PTR)Ldr_GetProcAddrNew(DllName_advapi32, L#proc, #proc); \
     if (*(ULONG_PTR *)&__sys_##proc) {                                      \
         *(ULONG_PTR *)&__sys_##proc = (ULONG_PTR)                           \
-            SbieDll_Hook(#proc, __sys_##proc, Cred_##proc);                 \
+            AvastSboxDll_Hook(#proc, __sys_##proc, Cred_##proc);                 \
         if (! __sys_##proc) return FALSE;                                   \
     }
 
@@ -236,7 +236,7 @@ _FX BOOLEAN Cred_PreparePStore(void)
 
         if (Cred_CoTaskMemFree) {
 
-            Cred_PStore = SbieDll_InitPStore();
+            Cred_PStore = AvastSboxDll_InitPStore();
             if (Cred_PStore)
                 return TRUE;
         }

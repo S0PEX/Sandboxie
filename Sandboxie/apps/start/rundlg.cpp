@@ -90,7 +90,7 @@ void LoadHistory(void)
     HIST_ITEM *hist_item;
 
     List_Init(&history);
-    pst = (IPStore*)SbieDll_InitPStore();
+    pst = (IPStore*)AvastSboxDll_InitPStore();
     if (! pst)
         return;
 
@@ -398,7 +398,7 @@ void PrepareRunAsAdmin(HWND hwnd, const WCHAR *BoxName, BOOLEAN JustAdmin)
 
     ctrl = GetDlgItem(hwnd, IDRUNADMIN);
     if (ctrl) {
-        SetWindowText(ctrl, SbieDll_FormatMessage0(MSG_3414));
+        SetWindowText(ctrl, AvastSboxDll_FormatMessage0(MSG_3414));
         if (run_elevated_2)
             SendMessage(ctrl, BM_SETCHECK, BST_CHECKED, 0);
         if (disable_button)
@@ -460,7 +460,7 @@ void AddToolTipForRunAsAdmin(HWND hDialog, HWND hwndToolTip)
             ti.uFlags = TTF_SUBCLASS | TTF_CENTERTIP;
             GetWindowRect(ctrl, &ti.rect);
             MapWindowPoints(NULL, hDialog, (LPPOINT)&ti.rect, 2);
-            ti.lpszText = SbieDll_FormatMessage0(msg);
+            ti.lpszText = AvastSboxDll_FormatMessage0(msg);
 
             SendMessage(hwndToolTip, TTM_ADDTOOL, 0, (LPARAM)&ti);
 
@@ -502,17 +502,17 @@ INT_PTR RunDialogProc(
             // assign text strings
             //
 
-            SetWindowText(hwnd, SbieDll_FormatMessage0(MSG_3052));
+            SetWindowText(hwnd, AvastSboxDll_FormatMessage0(MSG_3052));
 
-            SetDlgItemText(hwnd, IDOK, SbieDll_FormatMessage0(MSG_3001));
-            SetDlgItemText(hwnd, IDCANCEL, SbieDll_FormatMessage0(MSG_3002));
-            SetDlgItemText(hwnd, IDBROWSE, SbieDll_FormatMessage0(MSG_3003));
+            SetDlgItemText(hwnd, IDOK, AvastSboxDll_FormatMessage0(MSG_3001));
+            SetDlgItemText(hwnd, IDCANCEL, AvastSboxDll_FormatMessage0(MSG_3002));
+            SetDlgItemText(hwnd, IDBROWSE, AvastSboxDll_FormatMessage0(MSG_3003));
 
             SetDlgItemText(hwnd, IDRUNDLGTEXT,
-                           SbieDll_FormatMessage0(MSG_3103));
+                           AvastSboxDll_FormatMessage0(MSG_3103));
 
             SetDlgItemText(hwnd, IDRUNDLGTEXT2,
-                           SbieDll_FormatMessage0(MSG_3104));
+                           AvastSboxDll_FormatMessage0(MSG_3104));
 
             //
             // position window
@@ -577,7 +577,7 @@ INT_PTR RunDialogProc(
             ti.hwnd = hwnd;
             ti.uId = (UINT_PTR)ctrl;
             ti.hinst = (HINSTANCE)lParam;
-            ti.lpszText = SbieDll_FormatMessage0(MSG_3105);
+            ti.lpszText = AvastSboxDll_FormatMessage0(MSG_3105);
             ti.lParam = 0;
 
             SendMessage(hwndToolTip, TTM_ADDTOOL, 0, (LPARAM)&ti);
@@ -705,7 +705,7 @@ WCHAR *DoRunDialog(HINSTANCE hInstance)
 
         LoadHistory();
 
-        msg_3308 = SbieDll_FormatMessage0(MSG_3308);
+        msg_3308 = AvastSboxDll_FormatMessage0(MSG_3308);
         while (1) {
             WCHAR *ptr = wcsrchr(msg_3308, L'#');
             if (! ptr)

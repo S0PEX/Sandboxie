@@ -320,7 +320,7 @@ _FX BOOLEAN Ipc_Init(void)
     // initialize cache of open and closed IPC paths
     //
 
-    SbieDll_MatchPath(L'i', (const WCHAR *)-1);
+    AvastSboxDll_MatchPath(L'i', (const WCHAR *)-1);
 
     //
     // intercept NTDLL entry points
@@ -1027,7 +1027,7 @@ _FX NTSTATUS Ipc_NtCreatePort(
     // check if this is an open or closed path
     //
 
-    mp_flags = SbieDll_MatchPath(L'i', TruePath);
+    mp_flags = AvastSboxDll_MatchPath(L'i', TruePath);
 
     if (PATH_IS_CLOSED(mp_flags)) {
         status = STATUS_ACCESS_DENIED;
@@ -1122,7 +1122,7 @@ _FX NTSTATUS Ipc_NtConnectPort(
     // check if this is an open or closed path
     //
 
-    mp_flags = SbieDll_MatchPath(L'i', TruePath);
+    mp_flags = AvastSboxDll_MatchPath(L'i', TruePath);
 
     if (PATH_IS_CLOSED(mp_flags)) {
         status = STATUS_ACCESS_DENIED;
@@ -1248,7 +1248,7 @@ _FX NTSTATUS Ipc_NtSecureConnectPort(
     // check if this is an open or closed path
     //
 
-    mp_flags = SbieDll_MatchPath(L'i', TruePath);
+    mp_flags = AvastSboxDll_MatchPath(L'i', TruePath);
 
     if (PATH_IS_CLOSED(mp_flags)) {
         status = STATUS_ACCESS_DENIED;
@@ -1398,7 +1398,7 @@ _FX NTSTATUS Ipc_NtAlpcCreatePort(
     // check if this is an open or closed path
     //
 
-    mp_flags = SbieDll_MatchPath(L'i', TruePath);
+    mp_flags = AvastSboxDll_MatchPath(L'i', TruePath);
 
     if (PATH_IS_CLOSED(mp_flags)) {
         status = STATUS_ACCESS_DENIED;
@@ -1494,7 +1494,7 @@ _FX NTSTATUS Ipc_NtAlpcConnectPort(
     // check if this is an open or closed path
     //
 
-    mp_flags = SbieDll_MatchPath(L'i', TruePath);
+    mp_flags = AvastSboxDll_MatchPath(L'i', TruePath);
 
     if (PATH_IS_CLOSED(mp_flags)) {
         status = STATUS_ACCESS_DENIED;
@@ -1672,7 +1672,7 @@ _FX NTSTATUS Ipc_NtAlpcConnectPortEx(
     // check if this is an open or closed path
     //
 
-    mp_flags = SbieDll_MatchPath(L'i', TruePath);
+    mp_flags = AvastSboxDll_MatchPath(L'i', TruePath);
 
     if (PATH_IS_CLOSED(mp_flags)) {
         status = STATUS_ACCESS_DENIED;
@@ -2228,7 +2228,7 @@ _FX NTSTATUS Ipc_NtCreateEvent(
     // check if this is an open or closed path
     //
 
-    mp_flags = SbieDll_MatchPath(L'i', TruePath);
+    mp_flags = AvastSboxDll_MatchPath(L'i', TruePath);
 
     if (PATH_IS_CLOSED(mp_flags)) {
         status = STATUS_ACCESS_DENIED;
@@ -2330,7 +2330,7 @@ _FX NTSTATUS Ipc_NtOpenEvent(
     // check if this is an open or closed path
     //
 
-    mp_flags = SbieDll_MatchPath(L'i', TruePath);
+    mp_flags = AvastSboxDll_MatchPath(L'i', TruePath);
 
     if (PATH_IS_CLOSED(mp_flags)) {
         status = STATUS_ACCESS_DENIED;
@@ -2452,7 +2452,7 @@ _FX NTSTATUS Ipc_NtCreateMutant(
     // check if this is an open or closed path
     //
 
-    mp_flags = SbieDll_MatchPath(L'i', TruePath);
+    mp_flags = AvastSboxDll_MatchPath(L'i', TruePath);
 
     if (PATH_IS_CLOSED(mp_flags)) {
         status = STATUS_ACCESS_DENIED;
@@ -2554,7 +2554,7 @@ _FX NTSTATUS Ipc_NtOpenMutant(
     // check if this is an open or closed path
     //
 
-    mp_flags = SbieDll_MatchPath(L'i', TruePath);
+    mp_flags = AvastSboxDll_MatchPath(L'i', TruePath);
 
     if (PATH_IS_CLOSED(mp_flags)) {
         status = STATUS_ACCESS_DENIED;
@@ -2677,7 +2677,7 @@ _FX NTSTATUS Ipc_NtCreateSemaphore(
     // check if this is an open or closed path
     //
 
-    mp_flags = SbieDll_MatchPath(L'i', TruePath);
+    mp_flags = AvastSboxDll_MatchPath(L'i', TruePath);
 
     if (PATH_IS_CLOSED(mp_flags)) {
         status = STATUS_ACCESS_DENIED;
@@ -2779,7 +2779,7 @@ _FX NTSTATUS Ipc_NtOpenSemaphore(
     // check if this is an open or closed path
     //
 
-    mp_flags = SbieDll_MatchPath(L'i', TruePath);
+    mp_flags = AvastSboxDll_MatchPath(L'i', TruePath);
 
     if (PATH_IS_CLOSED(mp_flags)) {
         status = STATUS_ACCESS_DENIED;
@@ -2914,7 +2914,7 @@ _FX NTSTATUS Ipc_NtCreateSection(
     // check if this is an open or closed path
     //
 
-    mp_flags = SbieDll_MatchPath(L'i', TruePath);
+    mp_flags = AvastSboxDll_MatchPath(L'i', TruePath);
 
     if (PATH_IS_CLOSED(mp_flags)) {
         status = STATUS_ACCESS_DENIED;
@@ -3016,7 +3016,7 @@ _FX NTSTATUS Ipc_NtOpenSection(
     // check if this is an open or closed path
     //
 
-    mp_flags = SbieDll_MatchPath(L'i', TruePath);
+    mp_flags = AvastSboxDll_MatchPath(L'i', TruePath);
 
     if (PATH_IS_CLOSED(mp_flags)) {
         status = STATUS_ACCESS_DENIED;
@@ -3181,7 +3181,7 @@ _FX BOOLEAN Ipc_IsKnownDllInSandbox(
         BOOLEAN IsBoxedPath;
         WCHAR *path8k = Dll_AllocTemp(8192 * sizeof(WCHAR));
 
-        status = SbieDll_GetHandlePath(handle, path8k, &IsBoxedPath);
+        status = AvastSboxDll_GetHandlePath(handle, path8k, &IsBoxedPath);
 
         if (NT_SUCCESS(status) && IsBoxedPath)
             is_known_dll_in_sandbox = TRUE;
@@ -3303,7 +3303,7 @@ _FX NTSTATUS Ipc_ConnectProxyPort(
     else
         req->max_msg_len = -1;
 
-    rpl = (NAMED_PIPE_LPC_CONNECT_RPL *)SbieDll_CallServer(&req->h);
+    rpl = (NAMED_PIPE_LPC_CONNECT_RPL *)AvastSboxDll_CallServer(&req->h);
     Dll_Free(req);
 
     //
@@ -3433,7 +3433,7 @@ _FX NTSTATUS Ipc_NtRequestWaitReplyPort(
     if (info)
         memcpy(req->info, info->Buffer, info->BufferLen);
 
-    rpl = (NAMED_PIPE_LPC_REQUEST_RPL *)SbieDll_CallServer(&req->h);
+    rpl = (NAMED_PIPE_LPC_REQUEST_RPL *)AvastSboxDll_CallServer(&req->h);
     Dll_Free(req);
 
     //
@@ -3592,7 +3592,7 @@ _FX NTSTATUS Ipc_NtAlpcSendWaitReceivePort(
 
     memcpy(req->data, SendMsg, SendMsg->u1.s1.TotalLength);
 
-    rpl = (NAMED_PIPE_ALPC_REQUEST_RPL *)SbieDll_CallServer(&req->h);
+    rpl = (NAMED_PIPE_ALPC_REQUEST_RPL *)AvastSboxDll_CallServer(&req->h);
     Dll_Free(req);
 
     //

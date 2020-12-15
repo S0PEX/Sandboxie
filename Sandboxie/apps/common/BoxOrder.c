@@ -139,9 +139,9 @@ _FX WCHAR *BoxOrder_ReadSetting(const WCHAR *section_name)
             SBIE_INI_GET_USER_REQ req;
             req.h.msgid = MSGID_SBIE_INI_GET_USER;
             req.h.length = sizeof(SBIE_INI_GET_USER_REQ);
-            rpl = (SBIE_INI_GET_USER_RPL *)SbieDll_CallServer(&req.h);
+            rpl = (SBIE_INI_GET_USER_RPL *)AvastSboxDll_CallServer(&req.h);
             if (rpl && rpl->h.status != 0) {
-                SbieDll_FreeMem(rpl);
+                AvastSboxDll_FreeMem(rpl);
                 rpl = NULL;
             }
         }
@@ -540,7 +540,7 @@ _FX int BoxOrder_WriteSetting(WCHAR *text)
         } else
             ptr = NULL;
 
-        status = SbieDll_UpdateConf(
+        status = AvastSboxDll_UpdateConf(
             opcode, NULL, L"UserSettings_?", BoxOrder_SettingName, text);
         if (status != 0)
             return 0;

@@ -72,7 +72,7 @@ int DoUpdate(void)
     else
         return ERRLVL_CMDLINE;
 
-    status = SbieDll_UpdateConf(
+    status = AvastSboxDll_UpdateConf(
                     op, NULL, CmdVerb(1), CmdVerb(2), CmdVerb(3));
 
     return 0;

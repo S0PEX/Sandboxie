@@ -404,7 +404,7 @@ int DoLingerLeader(void)
             if (rc != 0)
                 break;
 
-            SbieDll_StartBoxedService(image, TRUE);
+            AvastSboxDll_StartBoxedService(image, TRUE);
         }
 
         for (i = 0; ; ++i) {
@@ -414,7 +414,7 @@ int DoLingerLeader(void)
             if (rc != 0)
                 break;
 
-            SbieDll_ExpandAndRunProgram(image);
+            AvastSboxDll_ExpandAndRunProgram(image);
         }
     }
 
@@ -629,7 +629,7 @@ int DoLingerLeader(void)
 do_kill_all:
 
         if (terminate_and_stop) {
-            SbieDll_KillAll(-1, NULL);
+            AvastSboxDll_KillAll(-1, NULL);
             break;
         }
     }

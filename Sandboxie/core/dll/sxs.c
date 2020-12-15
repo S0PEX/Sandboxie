@@ -937,7 +937,7 @@ _FX void *Sxs_CallService(SXS_ARGS *args, BOOLEAN *UseAltCreateActCtx)
 
     for (retries = 0; retries < 3; ++retries) {
 
-        status = SbieDll_QueuePutReq(
+        status = AvastSboxDll_QueuePutReq(
                             Sxs_QueueName, buf1, len1, &RequestId, &handle);
 
         if (status == STATUS_OBJECT_NAME_NOT_FOUND) {
@@ -956,7 +956,7 @@ _FX void *Sxs_CallService(SXS_ARGS *args, BOOLEAN *UseAltCreateActCtx)
                 wcscat(EvtName, L"_READY");
                 EvtHandle = CreateEvent(NULL, TRUE, FALSE, EvtName);
 
-                SbieDll_StartCOM(FALSE);
+                AvastSboxDll_StartCOM(FALSE);
 
                 WaitForSingleObject(EvtHandle, 30 * 1000);
                 CloseHandle(EvtHandle);
@@ -972,7 +972,7 @@ _FX void *Sxs_CallService(SXS_ARGS *args, BOOLEAN *UseAltCreateActCtx)
         if (status != 0)
             continue;
 
-        status = SbieDll_QueueGetRpl(Sxs_QueueName, RequestId, &buf2, &len2);
+        status = AvastSboxDll_QueueGetRpl(Sxs_QueueName, RequestId, &buf2, &len2);
 
         break;
     }
@@ -1342,13 +1342,13 @@ _FX HANDLE Sxs_CreateActCtxW_Alt(ACTCTX *ActCtx)
 
             MySource = Dll_AllocTemp(sizeof(WCHAR) * 8192);
 
-            status = SbieDll_GetHandlePath(hFile, MySource, &IsBoxedPath);
+            status = AvastSboxDll_GetHandlePath(hFile, MySource, &IsBoxedPath);
 
             CloseHandle(hFile);
 
             if (NT_SUCCESS(status) && IsBoxedPath) {
 
-                if (SbieDll_TranslateNtToDosPath(MySource)) {
+                if (AvastSboxDll_TranslateNtToDosPath(MySource)) {
 
                     memcpy(&MyActCtx, ActCtx, sizeof(ACTCTX));
                     MyActCtx.lpSource = MySource;
@@ -1842,7 +1842,7 @@ _FX void Sxs_ActivateDefaultManifest(void *ImageBase)
         WCHAR *DosPath =
             Dll_Alloc((wcslen(Ldr_ImageTruePath) + 4) * sizeof(WCHAR));
         wcscpy(DosPath, Ldr_ImageTruePath);
-        SbieDll_TranslateNtToDosPath(DosPath);
+        AvastSboxDll_TranslateNtToDosPath(DosPath);
 
         memzero(&ActCtx, sizeof(ACTCTX));
         ActCtx.cbSize = sizeof(ACTCTX);
@@ -1898,7 +1898,7 @@ _FX ULONG Sxs_CheckManifestForCreateProcess(const WCHAR *DosPath)
     // was used, to prevent any more interference from UAC
     //
 
-    ElvType = SbieDll_GetTokenElevationType();
+    ElvType = AvastSboxDll_GetTokenElevationType();
 
     if (ElvType == TokenElevationTypeFull) {
         TlsData->proc_create_process_as_invoker = TRUE;

@@ -69,10 +69,10 @@ SC_HANDLE ScMgr;
 static ULONG LangParm = 0;
 
 //---------------------------------------------------------------------------
-// SbieDll_GetLanguage
+// AvastSboxDll_GetLanguage
 //---------------------------------------------------------------------------
 
-ULONG SbieDll_GetLanguage(BOOLEAN *rtl)
+ULONG AvastSboxDll_GetLanguage(BOOLEAN *rtl)
 {
     if (rtl) {
         if (LangParm == 1037 || LangParm == 1025)
@@ -114,7 +114,7 @@ void Display_Error(PWSTR SubFuncName, DWORD LastError)
 
     if (LastError == ERROR_SERVICE_MARKED_FOR_DELETE) {
 
-        wcscpy(Text, SbieDll_FormatMessage1(8101, SubFuncName));
+        wcscpy(Text, AvastSboxDll_FormatMessage1(8101, SubFuncName));
 
     } else if (LastError) {
 
@@ -656,9 +656,9 @@ BOOL Kmd_Stop_Service(
 
             WCHAR Text[384];
 
-            wcscpy(Text, SbieDll_FormatMessage1(8102, Driver_Name));
+            wcscpy(Text, AvastSboxDll_FormatMessage1(8102, Driver_Name));
             wcscat(Text, L"\n\n");
-            wcscat(Text, SbieDll_FormatMessage0(8102 + retries));
+            wcscat(Text, AvastSboxDll_FormatMessage0(8102 + retries));
 
             MessageBox(NULL, Text, L"KmdUtil", MB_ICONEXCLAMATION | MB_OK);
         }

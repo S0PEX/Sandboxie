@@ -123,7 +123,7 @@ ALIGNED ULONG NetApi_NetWkstaGetInfo(
         wcscpy(req->name, servername);
 
     rpl = (NETAPI_WKSTA_GET_INFO_RPL *)
-                SbieDll_CallServer((MSG_HEADER *)req);
+                AvastSboxDll_CallServer((MSG_HEADER *)req);
     Dll_Free(req);
 
     if (! rpl)
@@ -171,7 +171,7 @@ ALIGNED ULONG NetApi_NetServerGetInfo(
         wcscpy(req->name, servername);
 
     rpl = (NETAPI_SERVER_GET_INFO_RPL *)
-                SbieDll_CallServer((MSG_HEADER *)req);
+                AvastSboxDll_CallServer((MSG_HEADER *)req);
     Dll_Free(req);
 
     if (! rpl)

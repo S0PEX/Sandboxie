@@ -35,7 +35,7 @@
 //---------------------------------------------------------------------------
 
 
-static void *SbieDll_Hook_CheckChromeHook(void *SourceFunc);
+static void *AvastSboxDll_Hook_CheckChromeHook(void *SourceFunc);
 
 static WCHAR *Dll_GetSettingsForImageName(
     const WCHAR *setting, const WCHAR *deftext);
@@ -59,7 +59,7 @@ BOOL bVTableEable = TRUE;
 #define NUM_VTABLES 0x10 
 #define VTABLE_SIZE 0x4000 //16k enough for 2048 8 byte entrys
 
-VECTOR_TABLE SbieDllVectorTable[NUM_VTABLES] = {
+VECTOR_TABLE AvastSboxDllVectorTable[NUM_VTABLES] = {
     {0,0,0},{0,0,0},{0,0,0},{0,0,0},
     {0,0,0},{0,0,0},{0,0,0},{0,0,0},
     {0,0,0},{0,0,0},{0,0,0},{0,0,0},
@@ -94,11 +94,11 @@ _FX LONG SbieApi_HookTramp(void *Source, void *Trampoline)
 
 
 //---------------------------------------------------------------------------
-// SbieDll_Hook
+// AvastSboxDll_Hook
 //---------------------------------------------------------------------------
 
 
-_FX void *SbieDll_Hook(
+_FX void *AvastSboxDll_Hook(
     const char *SourceFuncName, void *SourceFunc, void *DetourFunc)
 {
     static const WCHAR *_fmt1 = L"%s (%d)";
@@ -125,7 +125,7 @@ _FX void *SbieDll_Hook(
     // Chrome sandbox support
     //
 
-    SourceFunc = SbieDll_Hook_CheckChromeHook(SourceFunc);
+    SourceFunc = AvastSboxDll_Hook_CheckChromeHook(SourceFunc);
 
     //
     // if the source function begins with relative jump EB xx, it means
@@ -160,7 +160,7 @@ _FX void *SbieDll_Hook(
 
 #else ! WIN_64
 
-        func = SbieDll_Hook_CheckChromeHook((void *)target);
+        func = AvastSboxDll_Hook_CheckChromeHook((void *)target);
         if (func != (void *)target) {
             SourceFunc = func;
             goto skip_e9_rewrite;
@@ -376,7 +376,7 @@ skip_e9_rewrite: ;
         EnterCriticalSection(&VT_CriticalSection);
 
         if (bVTableEable) {
-            VECTOR_TABLE *ptrVTable = SbieDllVectorTable;
+            VECTOR_TABLE *ptrVTable = AvastSboxDllVectorTable;
             //default step size 
 
             for (i = 0; i < NUM_VTABLES && !hookset; i++, ptrVTable++) {
@@ -489,13 +489,13 @@ skip_e9_rewrite: ;
 
 
 //---------------------------------------------------------------------------
-// SbieDll_Hook_CheckChromeHook
+// AvastSboxDll_Hook_CheckChromeHook
 //---------------------------------------------------------------------------
 #ifdef _WIN64
-ULONGLONG * SbieDll_findChromeTarget(unsigned char* addr);
+ULONGLONG * AvastSboxDll_findChromeTarget(unsigned char* addr);
 #define MAX_FUNC_SIZE 0x76
 //Note any change to this function requires the same modification to the function in LowLevel: see init.c (findChromeTarget)
-ULONGLONG * SbieDll_findChromeTarget(unsigned char* addr)
+ULONGLONG * AvastSboxDll_findChromeTarget(unsigned char* addr)
 {
     int i = 0;
     ULONGLONG target;
@@ -524,7 +524,7 @@ ULONGLONG * SbieDll_findChromeTarget(unsigned char* addr)
 }
 #endif
 
-_FX void *SbieDll_Hook_CheckChromeHook(void *SourceFunc)
+_FX void *AvastSboxDll_Hook_CheckChromeHook(void *SourceFunc)
 {
 #ifndef _WIN64
 
@@ -555,14 +555,14 @@ _FX void *SbieDll_Hook_CheckChromeHook(void *SourceFunc)
 
     if (func[0] == 0x50 && func[1] == 0x48 && func[2] == 0xb8) {
         ULONGLONG *longlongs = *(ULONGLONG **)&func[3];
-        chrome64Target = SbieDll_findChromeTarget((unsigned char *)longlongs);
+        chrome64Target = AvastSboxDll_findChromeTarget((unsigned char *)longlongs);
     }
     // Chrome 49+ 64bit hook
     // mov rax, <target> 
     // jmp rax 
     else if (func[0] == 0x48 && func[1] == 0xb8 && *(USHORT *)&func[10] == 0xe0ff) {
         ULONGLONG *longlongs = *(ULONGLONG **)&func[2];
-        chrome64Target = SbieDll_findChromeTarget((unsigned char *)longlongs);
+        chrome64Target = AvastSboxDll_findChromeTarget((unsigned char *)longlongs);
     }
     if (chrome64Target) {
         SourceFunc = chrome64Target;

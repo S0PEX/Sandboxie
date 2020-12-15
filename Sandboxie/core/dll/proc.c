@@ -956,7 +956,7 @@ _FX BOOL Proc_UpdateProcThreadAttribute(
 	if (Attribute == 0x0002000d) //PROC_THREAD_ATTRIBUTE_JOB_LIST
 		return TRUE;
 
-	// some mitigation flags break SbieDll.dll Injection, so we disable them
+	// some mitigation flags break AvastSboxDll.dll Injection, so we disable them
 	if (Attribute == 0x00020007) //PROC_THREAD_ATTRIBUTE_MITIGATION_POLICY
 	{
 		DWORD64* policy_value_1 = cbSize >= sizeof(DWORD64) ? lpValue : NULL;
@@ -1489,7 +1489,7 @@ _FX BOOL Proc_ImpersonateSelf(BOOLEAN Enable)
 
     creation_flags &= ~CREATE_NEW_CONSOLE;
 
-    ok = SbieDll_RunSandboxed(L"*THREAD*", cmd, dir, creation_flags,
+    ok = AvastSboxDll_RunSandboxed(L"*THREAD*", cmd, dir, creation_flags,
                               StartupInfo, ProcessInformation);
 
     err = GetLastError();
@@ -1532,12 +1532,12 @@ _FX WCHAR *Proc_SelectCurrentDirectory(const WCHAR *lpCurrentDirectory)
 
         BOOLEAN IsBoxedPath;
         NTSTATUS status =
-                    SbieDll_GetHandlePath(FileHandle, path, &IsBoxedPath);
+                    AvastSboxDll_GetHandlePath(FileHandle, path, &IsBoxedPath);
 
         NtClose(FileHandle);
 
         if (NT_SUCCESS(status) || status == STATUS_BAD_INITIAL_PC) {
-            if (IsBoxedPath && SbieDll_TranslateNtToDosPath(path)) {
+            if (IsBoxedPath && AvastSboxDll_TranslateNtToDosPath(path)) {
 
                 return path;
             }
@@ -1725,11 +1725,11 @@ _FX void Proc_StoreImagePath(THREAD_DATA *TlsData, HANDLE FileHandle)
 {
     WCHAR *path = Dll_Alloc(sizeof(WCHAR) * 8192);
 
-    NTSTATUS status = SbieDll_GetHandlePath(
+    NTSTATUS status = AvastSboxDll_GetHandlePath(
                         FileHandle, path, &TlsData->proc_image_is_copy);
 
     if (NT_SUCCESS(status)) {
-        if (! SbieDll_TranslateNtToDosPath(path))
+        if (! AvastSboxDll_TranslateNtToDosPath(path))
             status = STATUS_UNSUCCESSFUL;
     }
 
@@ -1939,11 +1939,11 @@ _FX void Proc_ExitProcess(UINT ExitCode)
 
 
 //---------------------------------------------------------------------------
-// SbieDll_RunFromHome
+// AvastSboxDll_RunFromHome
 //---------------------------------------------------------------------------
 
 
-_FX BOOLEAN SbieDll_RunFromHome(
+_FX BOOLEAN AvastSboxDll_RunFromHome(
     const WCHAR *pgmName, const WCHAR *pgmArgs,
     STARTUPINFOW *si, PROCESS_INFORMATION *pi)
 {
@@ -2098,7 +2098,7 @@ _FX BOOLEAN Proc_CheckMailer(const WCHAR *ImagePath, BOOLEAN IsBoxedPath)
 
     if (! should_check_openfilepath) {
 
-        WCHAR *mail_pgm = SbieDll_AssocQueryProgram(L"mailto");
+        WCHAR *mail_pgm = AvastSboxDll_AssocQueryProgram(L"mailto");
 
         if (mail_pgm) {
 
@@ -2216,7 +2216,7 @@ _FX BOOLEAN Proc_IsSoftwareUpdateW(const WCHAR *path)
     if (Ldr_BoxedImage)
         return FALSE;
 
-    mp_flags = SbieDll_MatchPath(L'f', Ldr_ImageTruePath);
+    mp_flags = AvastSboxDll_MatchPath(L'f', Ldr_ImageTruePath);
     if (PATH_IS_OPEN(mp_flags))
         return FALSE;
 
@@ -2643,10 +2643,10 @@ _FX void Proc_RestartProcessOutOfPcaJob(void)
         BOOLEAN is_copy;
         WCHAR *BoxedDirectory = Dll_AllocTemp(sizeof(WCHAR) * 8192);
         NTSTATUS status =
-            SbieDll_GetHandlePath(FileHandle, BoxedDirectory, &is_copy);
+            AvastSboxDll_GetHandlePath(FileHandle, BoxedDirectory, &is_copy);
 
         if (NT_SUCCESS(status) &&
-                        SbieDll_TranslateNtToDosPath(BoxedDirectory)) {
+                        AvastSboxDll_TranslateNtToDosPath(BoxedDirectory)) {
 
             wcscpy(Directory, BoxedDirectory);
         }
@@ -2659,7 +2659,7 @@ _FX void Proc_RestartProcessOutOfPcaJob(void)
     StartupInfo.dwFlags = STARTF_FORCEOFFFEEDBACK;
     memzero(&ProcessInformation, sizeof(PROCESS_INFORMATION));
 
-    ok = SbieDll_RunSandboxed(L"*THREAD*", CommandLine, Directory, 0,
+    ok = AvastSboxDll_RunSandboxed(L"*THREAD*", CommandLine, Directory, 0,
                               &StartupInfo, &ProcessInformation);
 
     if (ok) {

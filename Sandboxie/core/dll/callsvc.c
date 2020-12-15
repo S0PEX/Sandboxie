@@ -17,7 +17,7 @@
  */
 
 //---------------------------------------------------------------------------
-// Sandboxie DLL (SbieDll) to Sandboxie Service (SbieSvc) RPC Interface
+// Sandboxie DLL (AvastSboxDll) to Sandboxie Service (SbieSvc) RPC Interface
 //---------------------------------------------------------------------------
 
 
@@ -29,11 +29,11 @@
 
 
 //---------------------------------------------------------------------------
-// SbieDll_PortName
+// AvastSboxDll_PortName
 //---------------------------------------------------------------------------
 
 
-_FX const WCHAR *SbieDll_PortName(void)
+_FX const WCHAR *AvastSboxDll_PortName(void)
 {
     static const WCHAR *_name = L"\\RPC Control\\" SBIESVC L"Port";
     return _name;
@@ -41,11 +41,11 @@ _FX const WCHAR *SbieDll_PortName(void)
 
 
 //---------------------------------------------------------------------------
-// SbieDll_IsWow64
+// AvastSboxDll_IsWow64
 //---------------------------------------------------------------------------
 
 
-_FX BOOLEAN SbieDll_IsWow64(void)
+_FX BOOLEAN AvastSboxDll_IsWow64(void)
 {
     //
     // in a sandbox process, Dll_IsWow64 is initialized during
@@ -80,11 +80,11 @@ _FX BOOLEAN SbieDll_IsWow64(void)
 
 
 //---------------------------------------------------------------------------
-// SbieDll_ConnectPort
+// AvastSboxDll_ConnectPort
 //---------------------------------------------------------------------------
 
 
-_FX BOOLEAN SbieDll_ConnectPort(BOOLEAN Silent)
+_FX BOOLEAN AvastSboxDll_ConnectPort(BOOLEAN Silent)
 {
     static BOOLEAN ErrorReported = FALSE;
 
@@ -100,7 +100,7 @@ _FX BOOLEAN SbieDll_ConnectPort(BOOLEAN Silent)
         QoS.ContextTrackingMode = SECURITY_DYNAMIC_TRACKING;
         QoS.EffectiveOnly = TRUE;
 
-        RtlInitUnicodeString(&PortName, SbieDll_PortName());
+        RtlInitUnicodeString(&PortName, AvastSboxDll_PortName());
 
         status = NtConnectPort(
             &data->PortHandle, &PortName, &QoS,
@@ -124,7 +124,7 @@ _FX BOOLEAN SbieDll_ConnectPort(BOOLEAN Silent)
         data->SizeofPortMsg = sizeof(PORT_MESSAGE);
 
         if (! Dll_BoxName)
-            SbieDll_IsWow64();
+            AvastSboxDll_IsWow64();
 
         if (Dll_IsWow64) {
 
@@ -146,11 +146,11 @@ _FX BOOLEAN SbieDll_ConnectPort(BOOLEAN Silent)
 
 
 //---------------------------------------------------------------------------
-// SbieDll_CallServer
+// AvastSboxDll_CallServer
 //---------------------------------------------------------------------------
 
 
-_FX MSG_HEADER *SbieDll_CallServer(MSG_HEADER *req)
+_FX MSG_HEADER *AvastSboxDll_CallServer(MSG_HEADER *req)
 {
     static volatile ULONG last_sequence = 0;
     UCHAR curr_sequence;
@@ -171,7 +171,7 @@ _FX MSG_HEADER *SbieDll_CallServer(MSG_HEADER *req)
         BOOLEAN Silent = (req->msgid == MSGID_SBIE_INI_GET_VERSION ||
                           req->msgid == MSGID_SBIE_INI_GET_USER ||
                           req->msgid == MSGID_PROCESS_CHECK_INIT_COMPLETE);
-        if (! SbieDll_ConnectPort(Silent))
+        if (! AvastSboxDll_ConnectPort(Silent))
             return NULL;
     }
 
@@ -328,11 +328,11 @@ _FX MSG_HEADER *SbieDll_CallServer(MSG_HEADER *req)
 
 
 //---------------------------------------------------------------------------
-// SbieDll_CallServerQueue
+// AvastSboxDll_CallServerQueue
 //---------------------------------------------------------------------------
 
 
-_FX void *SbieDll_CallServerQueue(const WCHAR* queue, void *req, ULONG req_len, ULONG rpl_min_len)
+_FX void *AvastSboxDll_CallServerQueue(const WCHAR* queue, void *req, ULONG req_len, ULONG rpl_min_len)
 {
 	//static ULONG _Ticks = 0;
 	//static ULONG _Ticks1 = 0;
@@ -353,7 +353,7 @@ _FX void *SbieDll_CallServerQueue(const WCHAR* queue, void *req, ULONG req_len, 
 
 	Sbie_snwprintf(QueueName, 64, L"*%s_%08X", queue, Dll_SessionId);
 
-	status = SbieDll_QueuePutReq(QueueName, req, req_len, &req_id, &event);
+	status = AvastSboxDll_QueuePutReq(QueueName, req, req_len, &req_id, &event);
 	if (NT_SUCCESS(status)) {
 
 		if (WaitForSingleObject(event, 60 * 1000) != 0)
@@ -364,7 +364,7 @@ _FX void *SbieDll_CallServerQueue(const WCHAR* queue, void *req, ULONG req_len, 
 
 	if (status == 0) {
 
-		status = SbieDll_QueueGetRpl(QueueName, req_id, &data, &data_len);
+		status = AvastSboxDll_QueueGetRpl(QueueName, req_id, &data, &data_len);
 
 		if (NT_SUCCESS(status)) {
 
@@ -400,11 +400,11 @@ _FX void *SbieDll_CallServerQueue(const WCHAR* queue, void *req, ULONG req_len, 
 
 
 //---------------------------------------------------------------------------
-// SbieDll_FreeMem
+// AvastSboxDll_FreeMem
 //---------------------------------------------------------------------------
 
 
-_FX void SbieDll_FreeMem(void *data)
+_FX void AvastSboxDll_FreeMem(void *data)
 {
     if (data)
         Dll_Free(data);
@@ -412,11 +412,11 @@ _FX void SbieDll_FreeMem(void *data)
 
 
 //---------------------------------------------------------------------------
-// SbieDll_QueueCreate
+// AvastSboxDll_QueueCreate
 //---------------------------------------------------------------------------
 
 
-_FX ULONG SbieDll_QueueCreate(const WCHAR *QueueName,
+_FX ULONG AvastSboxDll_QueueCreate(const WCHAR *QueueName,
                               HANDLE *out_EventHandle)
 {
     NTSTATUS status;
@@ -433,7 +433,7 @@ _FX ULONG SbieDll_QueueCreate(const WCHAR *QueueName,
         status = STATUS_UNSUCCESSFUL;
     else {
 
-        rpl = (QUEUE_CREATE_RPL *)SbieDll_CallServer(&req.h);
+        rpl = (QUEUE_CREATE_RPL *)AvastSboxDll_CallServer(&req.h);
         if (! rpl)
             status = STATUS_SERVER_DISABLED;
         else {
@@ -454,11 +454,11 @@ _FX ULONG SbieDll_QueueCreate(const WCHAR *QueueName,
 
 
 //---------------------------------------------------------------------------
-// SbieDll_QueueGetReq
+// AvastSboxDll_QueueGetReq
 //---------------------------------------------------------------------------
 
 
-_FX ULONG SbieDll_QueueGetReq(const WCHAR *QueueName,
+_FX ULONG AvastSboxDll_QueueGetReq(const WCHAR *QueueName,
                               ULONG *out_ClientPid,
                               ULONG *out_ClientTid,
                               ULONG *out_RequestId,
@@ -473,7 +473,7 @@ _FX ULONG SbieDll_QueueGetReq(const WCHAR *QueueName,
     req.h.msgid  = MSGID_QUEUE_GETREQ;
     wcscpy(req.queue_name, QueueName);
 
-    rpl = (QUEUE_GETREQ_RPL *)SbieDll_CallServer(&req.h);
+    rpl = (QUEUE_GETREQ_RPL *)AvastSboxDll_CallServer(&req.h);
     if (! rpl)
         status = STATUS_SERVER_DISABLED;
     else {
@@ -514,11 +514,11 @@ _FX ULONG SbieDll_QueueGetReq(const WCHAR *QueueName,
 
 
 //---------------------------------------------------------------------------
-// SbieDll_QueuePutRpl
+// AvastSboxDll_QueuePutRpl
 //---------------------------------------------------------------------------
 
 
-_FX ULONG SbieDll_QueuePutRpl(const WCHAR *QueueName,
+_FX ULONG AvastSboxDll_QueuePutRpl(const WCHAR *QueueName,
                               ULONG RequestId,
                               void *DataPtr,
                               ULONG DataLen)
@@ -537,7 +537,7 @@ _FX ULONG SbieDll_QueuePutRpl(const WCHAR *QueueName,
     req->data_len = DataLen;
     memcpy(req->data, DataPtr, DataLen);
 
-    rpl = (QUEUE_PUTRPL_RPL *)SbieDll_CallServer(&req->h);
+    rpl = (QUEUE_PUTRPL_RPL *)AvastSboxDll_CallServer(&req->h);
     if (! rpl)
         status = STATUS_SERVER_DISABLED;
     else {
@@ -553,11 +553,11 @@ _FX ULONG SbieDll_QueuePutRpl(const WCHAR *QueueName,
 
 
 //---------------------------------------------------------------------------
-// SbieDll_QueuePutReq
+// AvastSboxDll_QueuePutReq
 //---------------------------------------------------------------------------
 
 
-_FX ULONG SbieDll_QueuePutReq(const WCHAR *QueueName,
+_FX ULONG AvastSboxDll_QueuePutReq(const WCHAR *QueueName,
                               void *DataPtr,
                               ULONG DataLen,
                               ULONG *out_RequestId,
@@ -582,7 +582,7 @@ _FX ULONG SbieDll_QueuePutReq(const WCHAR *QueueName,
         status = STATUS_UNSUCCESSFUL;
     else {
 
-        rpl = (QUEUE_PUTREQ_RPL *)SbieDll_CallServer(&req->h);
+        rpl = (QUEUE_PUTREQ_RPL *)AvastSboxDll_CallServer(&req->h);
         if (! rpl)
             status = STATUS_SERVER_DISABLED;
         else {
@@ -615,11 +615,11 @@ _FX ULONG SbieDll_QueuePutReq(const WCHAR *QueueName,
 
 
 //---------------------------------------------------------------------------
-// SbieDll_QueueGetRpl
+// AvastSboxDll_QueueGetRpl
 //---------------------------------------------------------------------------
 
 
-_FX ULONG SbieDll_QueueGetRpl(const WCHAR *QueueName,
+_FX ULONG AvastSboxDll_QueueGetRpl(const WCHAR *QueueName,
                                           ULONG RequestId,
                                           void **out_DataPtr,
                                           ULONG *out_DataLen)
@@ -633,7 +633,7 @@ _FX ULONG SbieDll_QueueGetRpl(const WCHAR *QueueName,
     wcscpy(req.queue_name, QueueName);
     req.req_id = RequestId;
 
-    rpl = (QUEUE_GETRPL_RPL *)SbieDll_CallServer(&req.h);
+    rpl = (QUEUE_GETRPL_RPL *)AvastSboxDll_CallServer(&req.h);
     if (! rpl)
         status = STATUS_SERVER_DISABLED;
     else {
@@ -664,11 +664,11 @@ _FX ULONG SbieDll_QueueGetRpl(const WCHAR *QueueName,
 
 
 //---------------------------------------------------------------------------
-// SbieDll_UpdateConf
+// AvastSboxDll_UpdateConf
 //---------------------------------------------------------------------------
 
 
-_FX ULONG SbieDll_UpdateConf(
+_FX ULONG AvastSboxDll_UpdateConf(
     WCHAR OpCode, const WCHAR *Password, const WCHAR *Section,
     const WCHAR *Setting, const WCHAR *Value)
 {
@@ -717,7 +717,7 @@ _FX ULONG SbieDll_UpdateConf(
         req->value[0] = L'\0';
     req->value_len = wcslen(req->value);
 
-    rpl = (MSG_HEADER *)SbieDll_CallServer(&req->h);
+    rpl = (MSG_HEADER *)AvastSboxDll_CallServer(&req->h);
 
     if (! rpl)
         status = STATUS_INSUFFICIENT_RESOURCES;
@@ -732,11 +732,11 @@ _FX ULONG SbieDll_UpdateConf(
 
 
 //---------------------------------------------------------------------------
-// SbieDll_RunSandboxed
+// AvastSboxDll_RunSandboxed
 //---------------------------------------------------------------------------
 
 
-_FX BOOL SbieDll_RunSandboxed(
+_FX BOOL AvastSboxDll_RunSandboxed(
     const WCHAR *box_name, const WCHAR *cmd, const WCHAR *dir,
     ULONG creation_flags, STARTUPINFO *si, PROCESS_INFORMATION *pi)
 {
@@ -804,7 +804,7 @@ _FX BOOL SbieDll_RunSandboxed(
     // execute request
     //
 
-    rpl = (PROCESS_RUN_SANDBOXED_RPL *)SbieDll_CallServer(&req->h);
+    rpl = (PROCESS_RUN_SANDBOXED_RPL *)AvastSboxDll_CallServer(&req->h);
 
     Dll_Free(req);
 

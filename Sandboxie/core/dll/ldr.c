@@ -488,11 +488,11 @@ _FX BOOLEAN Ldr_Init()
     memzero(Ldr_Callbacks, sizeof(ULONG_PTR) * LDR_NUM_CALLBACKS);
 
     if (Dll_OsBuild >= 6000) {
-        SbieDll_RegisterDllCallback(Ldr_MyDllCallbackA);
+        AvastSboxDll_RegisterDllCallback(Ldr_MyDllCallbackA);
         __my_Ldr_CallOneDllCallback = Ldr_CallOneDllCallback;
     }
     else {
-        SbieDll_RegisterDllCallback(Ldr_MyDllCallbackW);
+        AvastSboxDll_RegisterDllCallback(Ldr_MyDllCallbackW);
         __my_Ldr_CallOneDllCallback = Ldr_CallOneDllCallbackXP;
     }
 
@@ -599,10 +599,10 @@ _FX BOOLEAN Ldr_Init()
 }
 
 //---------------------------------------------------------------------------
-// SbieDll_RegisterDllCallback
+// AvastSboxDll_RegisterDllCallback
 //---------------------------------------------------------------------------
 
-_FX BOOLEAN SbieDll_RegisterDllCallback(void *Callback)
+_FX BOOLEAN AvastSboxDll_RegisterDllCallback(void *Callback)
 {
     NTSTATUS status = 0;
     ULONG_PTR LdrCookie;
@@ -932,7 +932,7 @@ _FX NTSTATUS Ldr_LdrUnloadDll(HANDLE ModuleHandle)
     DWORD tid;
 
     //
-    // prevent unloading of SbieDll
+    // prevent unloading of AvastSboxDll
     //
 
     tid = GetCurrentThreadId();

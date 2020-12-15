@@ -103,11 +103,11 @@ extern "C" _FX BOOLEAN Pst_Init(HMODULE module)
 
 
 //---------------------------------------------------------------------------
-// SbieDll_InitPStore
+// AvastSboxDll_InitPStore
 //---------------------------------------------------------------------------
 
 
-extern "C" void *SbieDll_InitPStore(void)
+extern "C" void *AvastSboxDll_InitPStore(void)
 {
     static const WCHAR *_pstorec = L"pstorec.dll";
     void *pst = NULL;

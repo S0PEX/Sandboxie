@@ -1037,7 +1037,7 @@ _FX BOOLEAN Gui_IsOpenClass(const WCHAR *ClassName)
 
         if (! Gui_MatchPath_Initialized) {
 
-            mp_flags = SbieDll_MatchPath(L'w', (const WCHAR *)-1);
+            mp_flags = AvastSboxDll_MatchPath(L'w', (const WCHAR *)-1);
 
             Gui_MatchPath_Initialized = TRUE;
         }
@@ -1049,7 +1049,7 @@ _FX BOOLEAN Gui_IsOpenClass(const WCHAR *ClassName)
     // check the openness for the specified class name
     //
 
-    mp_flags = SbieDll_MatchPath(L'w', ClassName);
+    mp_flags = AvastSboxDll_MatchPath(L'w', ClassName);
     if (PATH_IS_OPEN(mp_flags))
         return TRUE;
 

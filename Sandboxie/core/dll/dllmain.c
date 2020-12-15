@@ -88,7 +88,7 @@ ULONG Dll_Windows = 0;
 CRITICAL_SECTION  VT_CriticalSection;
 #endif
 
-const UCHAR *SbieDll_Version = MY_VERSION_COMPAT;
+const UCHAR *AvastSboxDll_Version = MY_VERSION_COMPAT;
 
 //extern ULONG64 __security_cookie = 0;
 
@@ -177,7 +177,7 @@ _FX BOOL WINAPI DllMain(
 _FX void Dll_InitGeneric(HINSTANCE hInstance)
 {
     //
-    // Dll_InitGeneric initializes SbieDll in a general way, suitable
+    // Dll_InitGeneric initializes AvastSboxDll in a general way, suitable
     // for a program which may or may not be in the sandbox
     //
 
@@ -222,7 +222,7 @@ _FX void Dll_InitInjected(void)
 
 		Trace_Init();
 
-		OutputDebugString(L"SbieDll injected...");
+		OutputDebugString(L"AvastSboxDll injected...");
 	}
 
     //
@@ -488,7 +488,7 @@ _FX void Dll_InitExeEntry(void)
     // start SandboxieRpcSs
     //
 
-    SbieDll_StartCOM(TRUE);
+    AvastSboxDll_StartCOM(TRUE);
 }
 
 
@@ -674,7 +674,7 @@ _FX ULONG_PTR Dll_Ordinal1(
     if (!bHostInject)
     {
         //
-        // SbieDll was already partially initialized in Dll_InitGeneric,
+        // AvastSboxDll was already partially initialized in Dll_InitGeneric,
         // complete the initialization for a sandboxed process
         //
         HANDLE heventProcessStart = 0;

@@ -429,10 +429,10 @@ _FX NTSTATUS Key_MyParseProc_2(OBJ_PARSE_PROC_ARGS_2)
 
         //
         // when Software Restriction Policies is in effect, ADVAPI32 opens
-        // \REGISTRY\MACHINE for MAXIMUM_ALLOWED access even before SbieDll
+        // \REGISTRY\MACHINE for MAXIMUM_ALLOWED access even before AvastSboxDll
         // was loaded, so permit those accesses
         //
-        // note that since version 3.45, SbieDll takes over the job of
+        // note that since version 3.45, AvastSboxDll takes over the job of
         // loading static import DLLs, however ADVAPI32 is loaded directly
         // by NTDLL even before manipulating static imports.
         //

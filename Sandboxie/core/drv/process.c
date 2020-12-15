@@ -1040,7 +1040,7 @@ _FX void Process_NotifyProcess_Create(
                 // Program Compatibility Assistant (PCA) job, if its parent
                 // process was in a PCA job.  in this case we can't put it
                 // into a job in SbieSvc GuiServer::InitProcess, instead
-                // we have SbieDll restart the process without a job.
+                // we have AvastSboxDll restart the process without a job.
                 // see also Proc_RestartProcessOutOfPcaJob in core/dll/proc.c
                 //
 

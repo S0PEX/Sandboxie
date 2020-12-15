@@ -52,20 +52,20 @@ typedef struct _MY_TARGETS {
 // Functions
 //---------------------------------------------------------------------------
 
-SBIEDLL_EXPORT  HANDLE SbieDll_InjectLow_SendHandle(HANDLE hProcess);
+SBIEDLL_EXPORT  HANDLE AvastSboxDll_InjectLow_SendHandle(HANDLE hProcess);
 
-SBIEDLL_EXPORT  void *SbieDll_InjectLow_CopyCode(
+SBIEDLL_EXPORT  void *AvastSboxDll_InjectLow_CopyCode(
 	HANDLE hProcess, BOOLEAN iswow64, UCHAR *code, ULONG code_len);
-SBIEDLL_EXPORT  BOOLEAN SbieDll_InjectLow_BuildTramp(
+SBIEDLL_EXPORT  BOOLEAN AvastSboxDll_InjectLow_BuildTramp(
 	BOOLEAN long_diff, UCHAR *code, ULONG_PTR addr);
-SBIEDLL_EXPORT  void *SbieDll_InjectLow_CopySyscalls(HANDLE hProcess);
-SBIEDLL_EXPORT  BOOLEAN SbieDll_InjectLow_CopyData(
+SBIEDLL_EXPORT  void *AvastSboxDll_InjectLow_CopySyscalls(HANDLE hProcess);
+SBIEDLL_EXPORT  BOOLEAN AvastSboxDll_InjectLow_CopyData(
 	HANDLE hProcess, void *remote_addr, void *local_data);
 #ifdef _WIN64
-SBIEDLL_EXPORT BOOLEAN SbieDll_Has32BitJumpHorizon(void * target, void * detour);
-SBIEDLL_EXPORT void * SbieDll_InjectLow_getPage(HANDLE hProcess, void *remote_addr);
+SBIEDLL_EXPORT BOOLEAN AvastSboxDll_Has32BitJumpHorizon(void * target, void * detour);
+SBIEDLL_EXPORT void * AvastSboxDll_InjectLow_getPage(HANDLE hProcess, void *remote_addr);
 #endif
-SBIEDLL_EXPORT  BOOLEAN SbieDll_InjectLow_WriteJump(
+SBIEDLL_EXPORT  BOOLEAN AvastSboxDll_InjectLow_WriteJump(
 	HANDLE hProcess, void *remote_addr, BOOLEAN long_diff, void *localdata);
 
 //---------------------------------------------------------------------------
@@ -90,7 +90,7 @@ ULONG_PTR m_LdrInitializeThunk = 0;
 //---------------------------------------------------------------------------
 
 
-_FX ULONG SbieDll_InjectLow_InitHelper()
+_FX ULONG AvastSboxDll_InjectLow_InitHelper()
 {
     //
     // lock the SbieLow resource (embedded within the SbieSvc executable,
@@ -206,9 +206,9 @@ _FX ULONG SbieDll_InjectLow_InitHelper()
 //---------------------------------------------------------------------------
 
 
-_FX ULONG SbieDll_InjectLow_InitSyscalls(BOOLEAN drv_init)
+_FX ULONG AvastSboxDll_InjectLow_InitSyscalls(BOOLEAN drv_init)
 {
-	const WCHAR *_SbieDll = L"\\" SBIEDLL L".dll";
+	const WCHAR *_AvastSboxDll = L"\\" SBIEDLL L".dll";
 	WCHAR sbie_home[512];
 	ULONG status;
 	ULONG len;
@@ -217,7 +217,7 @@ _FX ULONG SbieDll_InjectLow_InitSyscalls(BOOLEAN drv_init)
 	ULONG *syscall_data;
 
 	//
-	// Get the SbieDll Location
+	// Get the AvastSboxDll Location
 	//
 
 	if (drv_init)
@@ -341,26 +341,26 @@ _FX ULONG SbieDll_InjectLow_InitSyscalls(BOOLEAN drv_init)
 	ptr += len + 1;
 
 	//
-	// append paths for native and wow64 SbieDll to the syscall buffer
+	// append paths for native and wow64 AvastSboxDll to the syscall buffer
 	//
 
 	wcscpy(ptr, sbie_home);
-	wcscat(ptr, _SbieDll);
+	wcscat(ptr, _AvastSboxDll);
 
 	len = wcslen(ptr);
-	extra->NativeSbieDll_offset = ULONG_DIFF(ptr, extra);;
-	extra->NativeSbieDll_length = len * sizeof(WCHAR);
+	extra->NativeAvastSboxDll_offset = ULONG_DIFF(ptr, extra);;
+	extra->NativeAvastSboxDll_length = len * sizeof(WCHAR);
 	ptr += len + 1;
 
 #ifdef _WIN64
 
 	wcscpy(ptr, sbie_home);
 	wcscat(ptr, L"\\32");
-	wcscat(ptr, _SbieDll);
+	wcscat(ptr, _AvastSboxDll);
 
 	len = wcslen(ptr);
-	extra->Wow64SbieDll_offset = ULONG_DIFF(ptr, extra);
-	extra->Wow64SbieDll_length = len * sizeof(WCHAR);
+	extra->Wow64AvastSboxDll_offset = ULONG_DIFF(ptr, extra);
+	extra->Wow64AvastSboxDll_length = len * sizeof(WCHAR);
 	ptr += len + 1;
 
 #endif _WIN64
@@ -384,7 +384,7 @@ _FX ULONG SbieDll_InjectLow_InitSyscalls(BOOLEAN drv_init)
 //---------------------------------------------------------------------------
 
 
-ULONG64 SbieDll_FindWOW64_Ntdll(_In_ HANDLE ProcessHandle)
+ULONG64 AvastSboxDll_FindWOW64_Ntdll(_In_ HANDLE ProcessHandle)
 {
 	/*typedef NTSTATUS(*P_NtQueryVirtualMemory)(
 		IN  HANDLE ProcessHandle,
@@ -449,7 +449,7 @@ ULONG64 SbieDll_FindWOW64_Ntdll(_In_ HANDLE ProcessHandle)
 //---------------------------------------------------------------------------
 
 
-_FX ULONG SbieDll_InjectLow(HANDLE hProcess, BOOLEAN is_wow64, BOOLEAN bHostInject, BOOLEAN dup_drv_handle)
+_FX ULONG AvastSboxDll_InjectLow(HANDLE hProcess, BOOLEAN is_wow64, BOOLEAN bHostInject, BOOLEAN dup_drv_handle)
 {
 	//SVC_PROCESS_MSG *msg = (SVC_PROCESS_MSG *)_msg;
 	ULONG errlvl = 0;
@@ -473,7 +473,7 @@ _FX ULONG SbieDll_InjectLow(HANDLE hProcess, BOOLEAN is_wow64, BOOLEAN bHostInje
 
 #ifdef _WIN64
 	if (is_wow64)//(msg->is_wow64)
-		lowdata.ntdll_wow64_base = SbieDll_FindWOW64_Ntdll(hProcess);
+		lowdata.ntdll_wow64_base = AvastSboxDll_FindWOW64_Ntdll(hProcess);
 #endif
 	lowdata.ntdll_base = (ULONG64)(ULONG_PTR)Dll_Ntdll;
 
@@ -490,7 +490,7 @@ _FX ULONG SbieDll_InjectLow(HANDLE hProcess, BOOLEAN is_wow64, BOOLEAN bHostInje
 		lowdata.is_win10 = TRUE;
 	}
 
-	void *remote_addr = SbieDll_InjectLow_CopyCode(hProcess, lowdata.is_wow64, lowdata.LdrInitializeThunk_tramp, sizeof(lowdata.LdrInitializeThunk_tramp));
+	void *remote_addr = AvastSboxDll_InjectLow_CopyCode(hProcess, lowdata.is_wow64, lowdata.LdrInitializeThunk_tramp, sizeof(lowdata.LdrInitializeThunk_tramp));
 	if (!remote_addr) {
 		errlvl = 0x33;
 		goto finish;
@@ -498,7 +498,7 @@ _FX ULONG SbieDll_InjectLow(HANDLE hProcess, BOOLEAN is_wow64, BOOLEAN bHostInje
 	//   if (lowdata.is_wow64 && (m_addr_high != m_addr_high_32))
 #ifdef _WIN64
 	lowdata.long_diff = TRUE;
-	if (SbieDll_Has32BitJumpHorizon((void *)m_LdrInitializeThunk, remote_addr)) {
+	if (AvastSboxDll_Has32BitJumpHorizon((void *)m_LdrInitializeThunk, remote_addr)) {
 		lowdata.long_diff = FALSE;
 	}
 #else
@@ -512,7 +512,7 @@ _FX ULONG SbieDll_InjectLow(HANDLE hProcess, BOOLEAN is_wow64, BOOLEAN bHostInje
 		//
 
 		lowdata.api_device_handle = (ULONG64)(ULONG_PTR)
-			SbieDll_InjectLow_SendHandle(hProcess);
+			AvastSboxDll_InjectLow_SendHandle(hProcess);
 		if (!lowdata.api_device_handle) {
 
 			errlvl = 0x22;
@@ -548,7 +548,7 @@ _FX ULONG SbieDll_InjectLow(HANDLE hProcess, BOOLEAN is_wow64, BOOLEAN bHostInje
 		+ m_sbielow_data_offset     // offset of args area
 		+ FIELD_OFFSET(SBIELOW_DATA, LdrInitializeThunk_tramp);
 
-	if (!SbieDll_InjectLow_BuildTramp(lowdata.long_diff,
+	if (!AvastSboxDll_InjectLow_BuildTramp(lowdata.long_diff,
 		lowdata.LdrInitializeThunk_tramp, tramp_remote_addr)) {
 
 		//UCHAR *code = lowdata.LdrInitializeThunk_tramp;
@@ -569,7 +569,7 @@ _FX ULONG SbieDll_InjectLow(HANDLE hProcess, BOOLEAN is_wow64, BOOLEAN bHostInje
 	// copy the syscall data buffer (m_syscall_data) to target process
 	//
 
-	void *remote_syscall_data = SbieDll_InjectLow_CopySyscalls(hProcess);
+	void *remote_syscall_data = AvastSboxDll_InjectLow_CopySyscalls(hProcess);
 	if (!remote_syscall_data) {
 
 		errlvl = 0x55;
@@ -582,7 +582,7 @@ _FX ULONG SbieDll_InjectLow(HANDLE hProcess, BOOLEAN is_wow64, BOOLEAN bHostInje
 	// write lowdata parameter area, including the converted trampoline
 	// code, into target process, and make it execute-read
 	//
-	if (!SbieDll_InjectLow_CopyData(hProcess, remote_addr, &lowdata)) {
+	if (!AvastSboxDll_InjectLow_CopyData(hProcess, remote_addr, &lowdata)) {
 
 		errlvl = 0x66;
 		goto finish;
@@ -594,7 +594,7 @@ _FX ULONG SbieDll_InjectLow(HANDLE hProcess, BOOLEAN is_wow64, BOOLEAN bHostInje
 	//
 	// Removed hard coded dependency on (.HEAD.00). No longer need to add 8 to
 	// the remote_addr
-	if (!SbieDll_InjectLow_WriteJump(hProcess, (UCHAR *)remote_addr + m_sbielow_start_offset, lowdata.long_diff, &lowdata)) {
+	if (!AvastSboxDll_InjectLow_WriteJump(hProcess, (UCHAR *)remote_addr + m_sbielow_start_offset, lowdata.long_diff, &lowdata)) {
 		errlvl = 0x77;
 		goto finish;
 	}
@@ -614,7 +614,7 @@ finish:
 //---------------------------------------------------------------------------
 
 
-_FX HANDLE SbieDll_InjectLow_SendHandle(HANDLE hProcess)
+_FX HANDLE AvastSboxDll_InjectLow_SendHandle(HANDLE hProcess)
 {
 	NTSTATUS status;
 	HANDLE HandleLocal, HandleRemote;
@@ -661,7 +661,7 @@ _FX HANDLE SbieDll_InjectLow_SendHandle(HANDLE hProcess)
 //---------------------------------------------------------------------------
 
 
-_FX void *SbieDll_InjectLow_CopyCode(HANDLE hProcess, BOOLEAN iswow64, UCHAR *code, ULONG code_len)
+_FX void *AvastSboxDll_InjectLow_CopyCode(HANDLE hProcess, BOOLEAN iswow64, UCHAR *code, ULONG code_len)
 {
 	SIZE_T region_size;
 	SIZE_T lowLevel_size;
@@ -724,7 +724,7 @@ _FX void *SbieDll_InjectLow_CopyCode(HANDLE hProcess, BOOLEAN iswow64, UCHAR *co
 //---------------------------------------------------------------------------
 
 
-_FX BOOLEAN SbieDll_InjectLow_BuildTramp(
+_FX BOOLEAN AvastSboxDll_InjectLow_BuildTramp(
 	BOOLEAN long_diff, UCHAR *code, ULONG_PTR addr)
 {
 
@@ -853,7 +853,7 @@ _FX BOOLEAN SbieDll_InjectLow_BuildTramp(
 //---------------------------------------------------------------------------
 
 
-_FX void *SbieDll_InjectLow_CopySyscalls(HANDLE hProcess)
+_FX void *AvastSboxDll_InjectLow_CopySyscalls(HANDLE hProcess)
 {
 	//
 	// allocate virtual memory somewhere in the process.  to force an
@@ -903,7 +903,7 @@ _FX void *SbieDll_InjectLow_CopySyscalls(HANDLE hProcess)
 //---------------------------------------------------------------------------
 
 
-_FX BOOLEAN SbieDll_InjectLow_CopyData(
+_FX BOOLEAN AvastSboxDll_InjectLow_CopyData(
 	HANDLE hProcess, void *remote_addr, void *local_data)
 {
 	//
@@ -931,7 +931,7 @@ _FX BOOLEAN SbieDll_InjectLow_CopyData(
 
 #ifdef _WIN64
 
-_FX BOOLEAN SbieDll_Has32BitJumpHorizon(void * target, void * detour)
+_FX BOOLEAN AvastSboxDll_Has32BitJumpHorizon(void * target, void * detour)
 {
 	ULONG_PTR diff;
 	long long delta;
@@ -945,7 +945,7 @@ _FX BOOLEAN SbieDll_Has32BitJumpHorizon(void * target, void * detour)
 	return FALSE;
 }
 
-_FX void * SbieDll_InjectLow_getPage(HANDLE hProcess, void *remote_addr)
+_FX void * AvastSboxDll_InjectLow_getPage(HANDLE hProcess, void *remote_addr)
 {
 	SIZE_T mySize;
 	ULONG_PTR tempAddr;
@@ -985,7 +985,7 @@ _FX void * SbieDll_InjectLow_getPage(HANDLE hProcess, void *remote_addr)
 
 	if (myTable) {
 		mySize = 0;
-		if (SbieDll_Has32BitJumpHorizon(myTable, func)) {
+		if (AvastSboxDll_Has32BitJumpHorizon(myTable, func)) {
 			WriteProcessMemory(hProcess, myTable, &remote_addr, 8, &mySize);
 			/*
 			sprintf(buffer,"myPage = %p, kernel32 = %p, ntdll = %p\n",myTable,myKernel32,myNtDll);
@@ -1053,7 +1053,7 @@ _FX void * SbieDll_InjectLow_getPage(HANDLE hProcess, void *remote_addr)
 //---------------------------------------------------------------------------
 // InjectLow_WriteJump
 //---------------------------------------------------------------------------
-_FX BOOLEAN SbieDll_InjectLow_WriteJump(HANDLE hProcess, void *remote_addr, BOOLEAN long_diff, void *localdata)
+_FX BOOLEAN AvastSboxDll_InjectLow_WriteJump(HANDLE hProcess, void *remote_addr, BOOLEAN long_diff, void *localdata)
 {
 	//
 	// prepare a short prolog code that jumps to the injected SbieLow
@@ -1095,7 +1095,7 @@ _FX BOOLEAN SbieDll_InjectLow_WriteJump(HANDLE hProcess, void *remote_addr, BOOL
 
 			len1 = 6;
 			target = (ULONG_PTR)&func[6];
-			myTable = SbieDll_InjectLow_getPage(hProcess, remote_addr);
+			myTable = AvastSboxDll_InjectLow_getPage(hProcess, remote_addr);
 			if (!myTable) {
 				//OutputDebugStringA("Error: Table not set!\n");
 				return FALSE;

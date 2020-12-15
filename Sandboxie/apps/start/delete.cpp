@@ -77,7 +77,7 @@ void Error(const WCHAR *Descr, NTSTATUS Status)
     if (! g_Silent) {
 
         WCHAR text[512];
-        wcscpy(text, SbieDll_FormatMessage1(MSG_3214, g_BoxName));
+        wcscpy(text, AvastSboxDll_FormatMessage1(MSG_3214, g_BoxName));
         wcscat(text, Descr);
         if (Status) {
             if (Status == STATUS_ACCESS_DENIED ||
@@ -85,7 +85,7 @@ void Error(const WCHAR *Descr, NTSTATUS Status)
             {
                 wcscat(text, L"\n\n");
                 wcscat(text,
-                    SbieDll_FormatMessage0(MSG_3215));
+                    AvastSboxDll_FormatMessage0(MSG_3215));
             }
             SetLastError(RtlNtStatusToDosError(Status));
         }
@@ -113,14 +113,14 @@ void DeleteSandbox(
 
     if (SbieApi_QueryProcess(NULL, NULL, NULL, NULL, NULL) == 0) {
         SetLastError(0);
-        Error(SbieDll_FormatMessage0(MSG_3221), 0);
+        Error(AvastSboxDll_FormatMessage0(MSG_3221), 0);
     }
 
     if ((phase <= 1) &&
             SbieApi_QueryConfBool(g_BoxName, L"NeverDelete", FALSE)) {
 
         SetLastError(0);
-        Error(SbieDll_FormatMessage0(MSG_3051), 0);
+        Error(AvastSboxDll_FormatMessage0(MSG_3051), 0);
 
     } else {
 
@@ -177,7 +177,7 @@ void RenameSandbox(void)
 
     WCHAR *boxpath = GetBoxFilePath(g_BoxName, 128);
     if (! boxpath)
-        Error(SbieDll_FormatMessage0(MSG_3216), 0);
+        Error(AvastSboxDll_FormatMessage0(MSG_3216), 0);
 
     RtlMoveMemory(
         boxpath + 4, boxpath, (wcslen(boxpath) + 1) * sizeof(WCHAR));
@@ -203,7 +203,7 @@ void RenameSandbox(void)
             return;
         }
 
-        Error(SbieDll_FormatMessage0(MSG_3217), status);
+        Error(AvastSboxDll_FormatMessage0(MSG_3217), status);
     }
 
     //
@@ -224,7 +224,7 @@ void RenameSandbox(void)
         NULL, NULL);
 
     if (status != STATUS_SUCCESS)
-        Error(SbieDll_FormatMessage0(MSG_3218), status);
+        Error(AvastSboxDll_FormatMessage0(MSG_3218), status);
 
     // rename sandbox using Nt file operations
 
@@ -255,12 +255,12 @@ void RenameSandbox(void)
             if (pids[0]) {
 
                 SetLastError(0);
-                Error(SbieDll_FormatMessage0(MSG_3221), 0);
+                Error(AvastSboxDll_FormatMessage0(MSG_3221), 0);
             }
         }
 
         if (retries == 30)
-            Error(SbieDll_FormatMessage0(MSG_3219), status);
+            Error(AvastSboxDll_FormatMessage0(MSG_3219), status);
 
         ++retries;
         Sleep(200);
@@ -301,7 +301,7 @@ void LaunchProgram(WCHAR *cmdSrc, bool bWait)
 
     if (! ok) {
         WCHAR txt[1024];
-        wcscpy(txt, SbieDll_FormatMessage0(MSG_3222));
+        wcscpy(txt, AvastSboxDll_FormatMessage0(MSG_3222));
         wcscat(txt, cmd);
         Error(txt, 0);
     }
@@ -366,7 +366,7 @@ void DeleteFilesInBox(const WCHAR *boxname)
 
     WCHAR *boxpath = GetBoxFilePath(boxname, 128);
     if (! boxpath) {
-        // Error(SbieDll_FormatMessage0(MSG_3216), 0);
+        // Error(AvastSboxDll_FormatMessage0(MSG_3216), 0);
         return;
     }
     WCHAR *backslash = wcsrchr(boxpath, L'\\');
@@ -858,7 +858,7 @@ mainloop:
 
                 bool ok = RenameSingleFile(heap, elem->path, name, BoxPath);
                 if (! ok) {
-                    Error(SbieDll_FormatMessage0(MSG_3220), 0);
+                    Error(AvastSboxDll_FormatMessage0(MSG_3220), 0);
                     return;
                 }
                 anyRenames = true;
@@ -935,7 +935,7 @@ ALIGNED WCHAR *GetBoxFilePath(const WCHAR *boxname, ULONG extra)
             boxname, path, NULL, NULL, &len, NULL, NULL);
 
         if (status == 0) {
-            BOOLEAN ok = SbieDll_TranslateNtToDosPath(path);
+            BOOLEAN ok = AvastSboxDll_TranslateNtToDosPath(path);
             if (! ok)
                 status = 1;
         }

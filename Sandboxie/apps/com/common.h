@@ -57,7 +57,7 @@ static BOOLEAN IsWindows81 = FALSE;
             SourceFunc = (void *)func;                              \
     }                                                               \
     __sys_##func =                                                  \
-        (ULONG_PTR)SbieDll_Hook(FuncName, SourceFunc, my_##func);   \
+        (ULONG_PTR)AvastSboxDll_Hook(FuncName, SourceFunc, my_##func);   \
     if (! __sys_##func)                                             \
         hook_success = FALSE;                                       \
     }
@@ -287,7 +287,7 @@ _FX void InitComplete(PROCESS_DATA *data) {
 _FX BOOL my_SetServiceStatus(SERVICE_STATUS_HANDLE hServiceStatus, LPSERVICE_STATUS lpServiceStatus) {
     int i = 0;
     //
-    // update service status in SbieDll
+    // update service status in AvastSboxDll
     // needed for SandboxieCrypto which hooks SetServiceStatus
     //
 #ifdef SANDBOXIECRYPTO
@@ -394,7 +394,7 @@ SC_HANDLE my_OpenServiceW(
     }
     else {
 
-        // fallback to SbieDll SCM implementation
+        // fallback to AvastSboxDll SCM implementation
 
         typedef SC_HANDLE(*P_OpenService)(
             SC_HANDLE hSCManager,
@@ -409,7 +409,7 @@ SC_HANDLE my_OpenServiceW(
         //wsprintf(txt, L"OpenService %s by Process ID %d gives %08X\n", lpServiceName, GetCurrentProcessId(), hService);
         //OutputDebugString(txt);}
 
-        if (SbieDll_IsBoxedService(hService)) {
+        if (AvastSboxDll_IsBoxedService(hService)) {
 
             SetLastError(err);
             return hService;
@@ -518,7 +518,7 @@ BOOL my_QueryServiceStatusEx(
         }
         else {
 
-            // fallback to SbieDll SCM implementation
+            // fallback to AvastSboxDll SCM implementation
 
             typedef BOOL(*P_QueryServiceStatusEx)(
                 SC_HANDLE hService, SC_STATUS_TYPE InfoLevel,
@@ -584,10 +584,10 @@ BOOL my_StartService(
 
     if (hService == SC_HANDLE_MSISERVER) {
 
-        ok = SbieDll_StartBoxedService(L"MSIServer", FALSE);
+        ok = AvastSboxDll_StartBoxedService(L"MSIServer", FALSE);
 
     }
-    else if (SbieDll_IsBoxedService(hService)) {
+    else if (AvastSboxDll_IsBoxedService(hService)) {
 
         typedef BOOL(*P_StartService)(
             SC_HANDLE hService, DWORD NumArgs, void *ArgVector);
@@ -617,7 +617,7 @@ BOOL my_ControlService(
     DWORD dwControl,
     LPSERVICE_STATUS lpServiceStatus)
 {
-    if (SbieDll_IsBoxedService(hService)) {
+    if (AvastSboxDll_IsBoxedService(hService)) {
 
         typedef BOOL(*P_ControlService)(
             SC_HANDLE hService,

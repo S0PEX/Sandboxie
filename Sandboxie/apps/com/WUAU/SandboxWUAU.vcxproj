@@ -85,7 +85,7 @@
       <MinimalRebuild />
     </ClCompile>
     <Link>
-      <AdditionalDependencies>SbieDll.lib;secur32.lib;ntdll.lib;psapi.lib;AdvApi32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>AvastSboxDll.lib;secur32.lib;ntdll.lib;psapi.lib;AdvApi32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='SbieDebug|x64'">
@@ -94,7 +94,7 @@
       <MinimalRebuild />
     </ClCompile>
     <Link>
-      <AdditionalDependencies>SbieDll.lib;secur32.lib;ntdll.lib;psapi.lib;AdvApi32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>AvastSboxDll.lib;secur32.lib;ntdll.lib;psapi.lib;AdvApi32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='SbieRelease|Win32'">
@@ -104,7 +104,7 @@
       <MinimalRebuild />
     </ClCompile>
     <Link>
-      <AdditionalDependencies>SbieDll.lib;secur32.lib;ntdll.lib;psapi.lib;AdvApi32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>AvastSboxDll.lib;secur32.lib;ntdll.lib;psapi.lib;AdvApi32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='SbieRelease|x64'">
@@ -114,7 +114,7 @@
       <MinimalRebuild />
     </ClCompile>
     <Link>
-      <AdditionalDependencies>SbieDll.lib;secur32.lib;ntdll.lib;psapi.lib;AdvApi32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>AvastSboxDll.lib;secur32.lib;ntdll.lib;psapi.lib;AdvApi32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

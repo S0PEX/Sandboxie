@@ -146,7 +146,7 @@ _FX BOOLEAN Gui_InitProp(void)
     // hook functions
     //
 
-    if (! SbieDll_IsOpenCOM()) {
+    if (! AvastSboxDll_IsOpenCOM()) {
 
         //
         // if there is access to the real COM epmapper, then don't

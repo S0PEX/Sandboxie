@@ -334,9 +334,9 @@ BOOLEAN Dll_InitPathList(void);
 
 void Dll_RefreshPathList(void);
 
-ULONG SbieDll_MatchPath(WCHAR path_code, const WCHAR *path);
+ULONG AvastSboxDll_MatchPath(WCHAR path_code, const WCHAR *path);
 
-ULONG SbieDll_MatchPath2(WCHAR path_code, const WCHAR *path, BOOLEAN bCheckObjectExists, BOOLEAN bMonitorLog);
+ULONG AvastSboxDll_MatchPath2(WCHAR path_code, const WCHAR *path, BOOLEAN bCheckObjectExists, BOOLEAN bMonitorLog);
 
 #define PATH_OPEN_FLAG      0x10
 #define PATH_CLOSED_FLAG    0x20

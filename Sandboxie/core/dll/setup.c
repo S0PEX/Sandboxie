@@ -80,7 +80,7 @@ static P_CM_Add_Driver_Package_ExW  __sys_CM_Add_Driver_Package_ExW = NULL;
 
 
 #define DO_CALL_HOOK(name,devName)                              \
-    __sys_##name = SbieDll_Hook(#name, __sys_##name, devName);  \
+    __sys_##name = AvastSboxDll_Hook(#name, __sys_##name, devName);  \
     if (! __sys_##name) return FALSE;
 
 #define HOOK_AW(func)                                           \

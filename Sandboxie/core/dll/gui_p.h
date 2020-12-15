@@ -723,7 +723,7 @@ extern  P_LoadString                __sys_LoadStringW;
 
 #define SBIEDLL_HOOK_GUI(proc)                              \
     *(ULONG_PTR *)&__sys_##proc = (ULONG_PTR)               \
-        SbieDll_Hook(#proc, __sys_##proc, Gui_##proc);      \
+        AvastSboxDll_Hook(#proc, __sys_##proc, Gui_##proc);      \
     if (! __sys_##proc) return FALSE;
 
 

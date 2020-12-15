@@ -304,7 +304,7 @@ _FX ULONG_PTR IpHlp_CommonCreate(BOOLEAN ip6)
     req.ip6 = ip6;
 
     handle = (ULONG_PTR)INVALID_HANDLE_VALUE;
-    rpl = (IPHLP_CREATE_FILE_RPL *)SbieDll_CallServer(&req.h);
+    rpl = (IPHLP_CREATE_FILE_RPL *)AvastSboxDll_CallServer(&req.h);
     if (! rpl)
         error = RPC_S_SERVER_UNAVAILABLE;
     else {
@@ -334,7 +334,7 @@ _FX BOOL IpHlp_IcmpCloseHandle(ULONG_PTR IcmpHandle)
     req.h.msgid = MSGID_IPHLP_CLOSE_HANDLE;
     req.handle = (ULONG)IcmpHandle;
 
-    rpl = SbieDll_CallServer(&req.h);
+    rpl = AvastSboxDll_CallServer(&req.h);
     if (! rpl)
         error = RPC_S_SERVER_UNAVAILABLE;
     else {
@@ -511,7 +511,7 @@ _FX ULONG IpHlp_CommonSend(         ULONG_PTR IcmpHandle,
     // issue request
     //
 
-    rpl = (IPHLP_SEND_ECHO_RPL *)SbieDll_CallServer(&req->h);
+    rpl = (IPHLP_SEND_ECHO_RPL *)AvastSboxDll_CallServer(&req->h);
 
     Dll_Free(req);
 

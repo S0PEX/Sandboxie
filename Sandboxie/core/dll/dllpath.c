@@ -194,21 +194,21 @@ _FX BOOLEAN Dll_InitPathList3(POOL *pool, ULONG path_code, LIST *list)
 }
 
 //---------------------------------------------------------------------------
-// SbieDll_MatchPath
+// AvastSboxDll_MatchPath
 //---------------------------------------------------------------------------
 
 
-_FX ULONG SbieDll_MatchPath(WCHAR path_code, const WCHAR *path)
+_FX ULONG AvastSboxDll_MatchPath(WCHAR path_code, const WCHAR *path)
 {
-    return SbieDll_MatchPath2(path_code, path, TRUE, TRUE);
+    return AvastSboxDll_MatchPath2(path_code, path, TRUE, TRUE);
 }
 
 //---------------------------------------------------------------------------
-// SbieDll_MatchPath2
+// AvastSboxDll_MatchPath2
 //---------------------------------------------------------------------------
 
 
-_FX ULONG SbieDll_MatchPath2(WCHAR path_code, const WCHAR *path, BOOLEAN bCheckObjectExists, BOOLEAN bMonitorLog)
+_FX ULONG AvastSboxDll_MatchPath2(WCHAR path_code, const WCHAR *path, BOOLEAN bCheckObjectExists, BOOLEAN bMonitorLog)
 {
     LIST *open_list, *closed_list, *write_list;
     PATTERN *pat;

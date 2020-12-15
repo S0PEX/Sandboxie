@@ -29,17 +29,17 @@ int __cdecl wmain(int argc, wchar_t **argv)
 
 	if (argc < 2) {
 		fprintf(stderr, "Usage: SbieLdr EXE\n");
-		fprintf(stderr, "Inject a SbieDll.dll into a process during start up.\n");
+		fprintf(stderr, "Inject a AvastSboxDll.dll into a process during start up.\n");
 		return 1;
 	}
 
-	errlvl = SbieDll_InjectLow_InitHelper();
+	errlvl = AvastSboxDll_InjectLow_InitHelper();
 	if (errlvl) {
 		fprintf(stderr, "Failed to initialize helper 0x%08X.\n", errlvl);
 		return errlvl;
 	}
 
-	errlvl = SbieDll_InjectLow_InitSyscalls(FALSE);
+	errlvl = AvastSboxDll_InjectLow_InitSyscalls(FALSE);
 	if (errlvl) {
 		fprintf(stderr, "Failed to initialize syscalls 0x%08X.\n", errlvl);
 		return errlvl;
@@ -61,7 +61,7 @@ int __cdecl wmain(int argc, wchar_t **argv)
 	isWow64 = !!peb32;
 #endif
 
-	errlvl = SbieDll_InjectLow(pi.hProcess, isWow64, 2, FALSE);
+	errlvl = AvastSboxDll_InjectLow(pi.hProcess, isWow64, 2, FALSE);
 	if (errlvl) {
 		fprintf(stderr, "inject failed 0x%08X, prcess terminate.\n", errlvl);
 		goto finish;

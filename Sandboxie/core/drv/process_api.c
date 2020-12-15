@@ -204,7 +204,7 @@ _FX NTSTATUS Process_Api_Query(PROCESS *proc, ULONG64 *parms)
     KIRQL irql;
 
     //
-    // this is the first SbieApi call by SbieDll
+    // this is the first SbieApi call by AvastSboxDll
     //
 
     if (proc)
